@@ -1,0 +1,46 @@
+name: swiftcaps-api
+
+ingress:
+  - name: ingress
+    bindings:
+      - port: 8100
+    rules:
+      - path: /api/userquiz
+        service: swiftcaps-quiz-api
+        preservePath: true
+      - path: /api/reporting
+        service: swiftcaps-reporting-api
+        preservePath: true
+      - path: /api/user
+        service: swiftcaps-user-api
+        preservePath: true
+      - path: /sc/admin/quiz
+        service: swiftcaps-admin-quiz-api
+        preservePath: true
+
+
+services:
+
+- name: swiftcaps-quiz-api
+  azureFunction: src/SwiftCaps.Services.Quiz.API/
+  bindings:
+  - port: 8101
+    protocol: http
+
+- name: swiftcaps-reporting-api
+  azureFunction: src/SwiftCaps.Services.Reporting.API/
+  bindings:
+  - port: 8102
+    protocol: http
+
+- name: swiftcaps-user-api
+  azureFunction: src/SwiftCaps.Services.User.API/
+  bindings:
+    - port: 8103
+      protocol: http
+
+- name: swiftcaps-admin-quiz-api
+  azureFunction: src/SwiftCaps.Admin.Services.Quiz.API/
+  bindings:
+  - port: 8104
+    protocol: http

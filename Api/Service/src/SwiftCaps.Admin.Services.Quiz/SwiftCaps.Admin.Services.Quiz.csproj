@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Ardalis.GuardClauses" Version="3.2.0" />
+    <PackageReference Include="Microsoft.Graph" Version="3.35.0" />
+    <PackageReference Include="Microsoft.Graph.Auth" Version="1.0.0-preview.7" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Shared\SwiftCaps.Data\SwiftCaps.Data.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\SwiftCaps.Helpers\SwiftCaps.Helpers.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\SwiftCaps.Models\SwiftCaps.Models.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\SwiftCaps.Services.Abstraction\SwiftCaps.Services.Abstraction.csproj" />
+  </ItemGroup>
+</Project>

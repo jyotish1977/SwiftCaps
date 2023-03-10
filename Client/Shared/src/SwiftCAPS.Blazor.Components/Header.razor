@@ -1,0 +1,36 @@
+﻿
+<header class="ms-bgColor-themePrimary ms-fontColor-white">
+    <div class="header-text">
+        @if(ShowWaffle)
+		{
+			<IconButton IconName="WaffleOffice365" OnClick="@OnWaffleClick" id="btnAppIcon"></IconButton>
+		}
+        <span class="ms-fontSize-18">@Text</span>
+    </div>
+    <div class="header-links">
+        @ChildContent
+    </div>
+
+</header>
+
+@code
+{
+
+	[Parameter]
+    public string Text { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public EventCallback OnAppIconClick { get; set; }
+
+	[Parameter]
+	public bool ShowWaffle { get; set; } = true;
+		
+    public async Task OnWaffleClick()
+    {
+        await OnAppIconClick.InvokeAsync(null);
+    }
+
+}

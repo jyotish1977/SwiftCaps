@@ -1,0 +1,119 @@
+﻿@page "/"
+
+<Stack ClassName="page-header">
+    <Text As="p" Variant="TextType.XLargePlus">Quizzes</Text>
+</Stack>
+
+<Stack>
+    <CommandBar ClassName="quiz-command-bar" Items=@_commandItems>
+        <ItemTemplate Context="item">
+            <CommandButton IconName="@item.IconName" ClassName="ms-Button--action ms-Button--command ms-Button--commandBar"
+                           Text=@item.Text Command="_buttonCommand" CommandParameter="@item.Key"
+                           Disabled="@((item.Key == CommandItem.Edit.ToString() || item.Key == CommandItem.Delete.ToString())  && SelectedQuizSummary.SelectedItems.Count == 0)">
+            </CommandButton>
+        </ItemTemplate>
+    </CommandBar>
+</Stack>
+
+@if (_isBusy)
+{
+    <Spinner Size=@SpinnerSize.Large Label="Loading..." />
+}
+
+@if (_showErrorMessage)
+{
+    <div class="ms-Grid" dir="ltr">
+        <div class="ms-Grid-row">
+            <div class="ms-Grid-col ms-sm12 ms-mdOffset2 ms-md8">
+                <MessageBar MessageBarType="MessageBarType.Error" IsMultiline="false">
+                    @_quizListError
+                </MessageBar>
+            </div>
+        </div>
+    </div>
+}
+
+@if (_canShowGrid)
+{
+    <DetailsList ItemsSource="Quizzes"
+                 GetKey=@(item=>item.Id)
+                 IsVirtualizing="true"
+                 Columns="_columns"
+                 LayoutMode="BlazorFluentUI.Lists.DetailsListLayoutMode.Justified"
+                 TItem="QuizSummaryItem"
+                 OnItemInvoked="OnQuizItemClick"
+                 Selection="SelectedQuizSummary"
+                 Compact=false
+                 CheckboxVisibility="CheckboxVisibility.OnHover"
+                 SelectionMode="SelectionMode.Single"/>
+
+    @if (Quizzes != null && Quizzes.Count() == 0)
+    {
+        <Stack>
+            <StackItem Tokens=@(new StackItemTokens { Padding = 30 }) Align=@Alignment.Center>
+                <div class="ms-fontColor-gray120 ms-fontSize-20">
+                    No quizzes available
+                </div>
+            </StackItem>
+        </Stack>
+    }
+}
+
+<Panel IsOpen=@_isPanelOpen
+       IsLightDismiss="false"
+       OnLightDismissClick=@OnPanelDismiss
+       OnDismiss=@OnPanelDismiss
+       OnOpened=@OnPanelOpened
+       ClassName="@((_currentCommand == CommandItem.Add || _currentCommand == CommandItem.Edit) ? "upsert-panel-container" : "")"
+       Type="_panelType">
+    <NavigationTemplate>
+        <Stack Horizontal="true" Tokens="@(new StackTokens { Padding = ".5rem" })"
+               HorizontalAlign="(_displayPanelBackButton) ? Alignment.SpaceBetween : Alignment.End">
+
+            @if (_displayPanelBackButton)
+            {
+                <StackItem Align="Alignment.End">
+                    <IconButton OnClick=@(() => ReloadSelectedQuiz()) IconName="Back" />
+                </StackItem>
+            }
+            <StackItem Align="Alignment.End">
+                @if (_currentCommand == CommandItem.Detail && _panelType == PanelType.LargeFixed)
+                {
+                    <IconButton OnClick=@(() => ReloadQuiz()) IconName="Refresh" />
+                }
+                <IconButton OnClick=@OnPanelDismiss IconName="ChromeClose" />
+            </StackItem>
+        </Stack>
+    </NavigationTemplate>
+    <ChildContent>
+
+        @if (_currentCommand == CommandItem.None)
+        {
+            <Spinner Size=@SpinnerSize.Large Label="Loading..." />
+        }
+
+        @if (_currentCommand == CommandItem.Detail)
+        {
+            <QuizDetail Quiz="_selectedQuiz"
+                        QuizSummary="SelectedQuizSummary?.SelectedItems?.FirstOrDefault()"
+                        OnEditCallback="OpenEditQuizHandler"
+                        OnDeleteInvoked="OpenDeleteQuizInvoke"
+                        OnClosePanelCallback="OnPanelDismiss"
+                        OnChangePanelTypeCallback="@((panelType) => ChangePanelTypeHandler(panelType))"></QuizDetail>
+        }
+
+        @if (_currentCommand == CommandItem.Delete)
+        {
+            <DeleteCommon Entity="Quiz"
+                         OnCloseCallback="OnPanelDismiss"
+                         OnDeleteCallback="DeletePanelCloseHandler"></DeleteCommon>
+        }
+
+        @if (_currentCommand == CommandItem.Add || _currentCommand == CommandItem.Edit)
+        {
+            <UpsertQuiz Mode="@_currentCommand"
+                        Heading="@_currentCommand.ToString()"
+                        QuizSummary="SelectedQuizSummary?.SelectedItems?.FirstOrDefault()"></UpsertQuiz>
+        }
+    </ChildContent>
+</Panel>

@@ -1,0 +1,17 @@
+﻿<Stack Horizontal="true" ClassName="ms-List-cell-default">
+    <div class="leaderBoardColumn1">
+        <Text Variant="TextType.Medium">@LeaderBoard.UserName</Text>
+    </div>
+    <div class="leaderBoardNextColumn">
+        @foreach (var weeklyItem in LeaderBoard.WeeklyQuizReports)
+        {
+            <span class=@(weeklyItem.IsCompleted ? "greenDot":"redDot") />
+        }
+    </div>
+    <div class="leaderBoardNextColumn">
+        @foreach (var monthlyItem in LeaderBoard.MonthlyQuizReports)
+        {
+            <span class=@(monthlyItem.IsCompleted ? "greenDot":"redDot") />
+        }
+    </div>
+</Stack>

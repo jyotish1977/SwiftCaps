@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Api\Service\src\SwiftCaps.Services.Quiz\SwiftCaps.Services.Quiz.csproj" />
+    <ProjectReference Include="..\..\Api\Service\src\SwiftCaps.Services.Users\SwiftCaps.Services.User.csproj" />
+    <ProjectReference Include="..\..\Api\Service\src\SwiftCaps.Services.Reporting\SwiftCaps.Services.Reporting.csproj" />
+    <ProjectReference Include="..\..\Client\Quiz\Mobile\src\Lib\SwiftCaps.Bootstrap\SwiftCaps.Client.Bootstrap.csproj" />
+    <ProjectReference Include="..\..\Client\Quiz\Mobile\src\Lib\SwiftCaps.Client.Core\SwiftCaps.Client.Core.csproj" />
+    <ProjectReference Include="..\SwiftCaps.Data\SwiftCaps.Data.csproj" />
+    <ProjectReference Include="..\SwiftCaps.Models\SwiftCaps.Models.csproj" />
+    <ProjectReference Include="..\SwiftCaps.Helpers\SwiftCaps.Helpers.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.6" />
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.31.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="PCLAppConfig" Version="1.0.1" />
+    <PackageReference Include="Unity.ServiceLocation" Version="5.11.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Helpers\" />
+  </ItemGroup>
+</Project>

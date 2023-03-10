@@ -1,0 +1,26 @@
+﻿<Shell
+    x:Class="SwiftCaps.AppShell"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:SwiftCaps.Views"
+    x:Name="TheShell"
+    Title="Swift Caps"
+    BindingContext="{Binding AppShell, Source={StaticResource Locator}}"
+    FlyoutBackgroundColor="{StaticResource Primary}"
+    FlyoutBehavior="Disabled"
+    Navigated="OnShellNavigated"
+    Navigating="OnShellNavigating">
+
+    <ShellItem Route="login">
+        <ShellContent>
+            <views:LoginPage />
+        </ShellContent>
+    </ShellItem>
+
+    <ShellItem Route="root">
+        <ShellContent Route="quizlistpage">
+            <views:QuizListPage />
+        </ShellContent>
+    </ShellItem>
+
+</Shell>

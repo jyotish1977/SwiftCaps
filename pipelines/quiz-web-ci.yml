@@ -1,0 +1,114 @@
+name: QuizWeb_CiBuild_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+
+trigger:
+  branches:
+    include:
+    - master
+    - develop
+    - version/*
+    - feature/*
+  paths:
+    include:
+    - Client/Quiz/Web
+    - Client/Shared
+    - Shared/SwiftCaps.Models
+    - tools/SwiftCaps.Quiz.Web.Build
+    - tools/build
+    - pipelines/quiz-web-ci.yml
+    - pipelines/templates/web-build-template.yml
+    - pipelines/templates/web-deploy-template.yml
+
+
+pr:
+- version/*     
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  - group: rsaf-common-group
+  - template: templates/buildnumber-variables-template.yml
+  - name: component
+    value: SwiftCaps.Quiz.Web 
+
+stages:
+- stage: Build
+  jobs:
+  - job: Build
+    steps:
+    - template: templates/buildnumber-template.yml
+    - template: templates/web-build-template.yml
+      parameters:
+        component: $(component)
+
+- stage: DevDeploy
+  dependsOn: Build     
+  condition: and(succeeded(), or(eq(variables.isMain,true), eq(variables.isDevelop,true), eq(variables.isVersion,true), eq(variables.isPR,true), contains(variables['Build.SourceVersionMessage'], '***deploy_dev***')))
+  displayName: 'Dev Deploy'
+  pool: 
+    vmImage: 'windows-latest'
+  variables:
+    - name: AzureAd.Authority
+      value: 'https://login.microsoftonline.com/$(TenantId)'
+    - name: AzureAd.ClientId
+      value: '$(QuizWebAppClientId)'
+    - name: ApiGateway
+      value: '$(ApimUrl)/api'
+    - name: SubscriptionKey
+      value: '$(ApimSubscriptionKey)'
+    - name: Applications.0.Url
+      value: 'https://$(QuizWebAppPrefix)-dev.azurewebsites.net'      
+    - name: Applications.1.Url
+      value: 'https://$(AdminQuizWebAppPrefix)-dev.azurewebsites.net'      
+  jobs:
+  - deployment: DevDeploy
+    displayName: 'Deploy to Dev'
+    environment: Dev 
+    variables:
+      - group: sc-dev
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - template: templates/web-deploy-template.yml
+              parameters:
+                azConnection: $(RsafAzConnection)
+                appName: '$(QuizWebAppPrefix)-dev'
+                resourceGroup: '$(ResourceGroupPrefix)-dev'
+                package: $(Pipeline.Workspace)/**/*.zip        
+
+- stage: TestDeploy
+  dependsOn: Build     
+  condition: and(succeeded(), or(eq(variables.isMain, true), eq(variables.isDevelop, true), eq(variables.isVersion, true), eq(variables.isPR, true)))
+  displayName: 'Test Deploy'
+  pool: 
+    vmImage: 'windows-latest'
+  variables:
+    - name: AzureAd.Authority
+      value: 'https://login.microsoftonline.com/$(TenantId)'
+    - name: AzureAd.ClientId
+      value: '$(QuizWebAppClientId)'
+    - name: ApiGateway
+      value: '$(ApimUrl)/api'
+    - name: SubscriptionKey
+      value: '$(ApimSubscriptionKey)'
+    - name: Applications.0.Url
+      value: 'https://$(QuizWebAppPrefix)-test.azurewebsites.net'      
+    - name: Applications.1.Url
+      value: 'https://$(AdminQuizWebAppPrefix)-test.azurewebsites.net'            
+  jobs:
+  - deployment: TestDeploy
+    displayName: 'Deploy to Test'
+    environment: Test
+    variables:
+      - group: sc-test
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - template: templates/web-deploy-template.yml
+              parameters:
+                azConnection: $(RsafAzConnection)
+                appName: '$(QuizWebAppPrefix)-test'
+                resourceGroup: '$(ResourceGroupPrefix)-test'
+                package: $(Pipeline.Workspace)/**/*.zip

@@ -1,0 +1,19 @@
+﻿@page "/"
+
+@if (!string.IsNullOrWhiteSpace(ErrorMessage))
+{
+    <BlazorFluentUI.Text Variant="TextType.XLarge">@ErrorMessage</BlazorFluentUI.Text>
+}
+else
+{
+    @if (UserQuizzes == null)
+    {
+        <Spinner Size=@SpinnerSize.Large Label="Loading..." />
+    }
+    else
+    {
+        <Stack HorizontalAlign="Alignment.Center">
+            <QuizList UserQuizzes="@UserQuizzes" OnQuizClick="QuizClickHandler" />
+        </Stack>
+    }
+}

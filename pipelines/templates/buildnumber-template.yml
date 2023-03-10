@@ -1,0 +1,22 @@
+steps:
+  - bash: |
+        versionPrefix = ''
+        if [ $(isMain) = True ] ; then
+          versionPrefix='001.$(buildId).$(patch)'
+        elif [ $(isDevelop) = True ] ; then   
+          versionPrefix='002.$(buildId).$(patch)'
+        elif [ $(isFeature) = True ] ; then   
+          versionPrefix='004.$(featureNumber).$(buildId).$(patch)'          
+        elif [ $(isPR) = True ] ; then   
+          versionPrefix='005.$(buildId).$(patch)'  
+        elif [ $(isVersion) = True ] ; then   
+          versionPrefix='$(versionNumber).$(buildId)'  
+        fi          
+        echo isMain=$(isMain)  
+        echo isDevelop=$(isDevelop)
+        echo isVersion=$(isVersion)
+        echo isPR=$(isPR)
+        echo isFeature=$(isFeature)
+        echo versionNumber=$versionPrefix
+        echo "##vso[build.updatebuildnumber]$versionPrefix"
+    displayName: 'Set Build Number'

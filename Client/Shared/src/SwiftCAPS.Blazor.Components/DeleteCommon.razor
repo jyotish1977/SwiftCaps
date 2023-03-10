@@ -1,0 +1,75 @@
+﻿@using SwiftCaps.Models.Enums
+
+@if (_displayMode == DeleteDisplayMode.Success)
+{
+    <Stack Tokens="@(new StackTokens { Padding = new CssValue(10.0), ChildrenGap = new[] { 10.0 } })">
+        <Stack Horizontal="true">
+            <StackItem Tokens="@(new StackItemTokens { Padding = 5 })">
+                <Text Variant="TextType.XLargePlus">
+                    <Icon Style="color: green" IconName="SkypeCircleCheck"></Icon>
+                </Text>
+            </StackItem>
+            <StackItem>
+                <Text Variant="TextType.XLargePlus">
+                    @Entity has been deleted
+                </Text>
+            </StackItem>
+        </Stack>
+        <Stack Style="margin:0;">
+            <StackItem ClassName="action-button">
+                <PrimaryButton OnClick="CloseDeletePanel">Close</PrimaryButton>
+            </StackItem>
+        </Stack>
+    </Stack>
+}
+@if (_displayMode == DeleteDisplayMode.Error)
+{
+    <Stack Tokens="@(new StackTokens { Padding = new CssValue(10.0), ChildrenGap = new[] { 10.0 } })">
+        <Stack Horizontal="true">
+            <StackItem>
+                <Stack Style="margin:0;">
+                    <StackItem ClassName="action-button">
+                        <PrimaryButton OnClick="CloseDeletePanel">Close</PrimaryButton>
+                    </StackItem>
+                </Stack>
+            </StackItem>
+        </Stack>
+    </Stack>
+}
+@if (_displayMode == DeleteDisplayMode.Loading)
+{
+    <Stack Tokens="@(new StackTokens { Padding = new CssValue(10.0), ChildrenGap = new[] { 10.0 } })">
+        <Stack Horizontal="true">
+            <StackItem>
+                <Spinner Size=@SpinnerSize.Large Label="@_deleteLoadingLabel" />
+            </StackItem>
+        </Stack>
+    </Stack>
+}
+@if (_displayMode == DeleteDisplayMode.Content)
+{
+    <Stack Tokens="@(new StackTokens { Padding = new CssValue(10.0) })">
+        <Stack Horizontal="true">
+            <StackItem>
+                <Text Variant="TextType.XLargePlus">
+                    Delete @Entity?
+                </Text>
+            </StackItem>
+        </Stack>
+        <Stack Style="margin:0;">
+            <StackItem Tokens="@(new StackItemTokens { Margin= "2.4rem 0 0 0" })">
+                <Text Variant="TextType.Small">
+                    When you delete @Entity.ToLower(), their data is deleted and will be inaccessible. Deleted @Entity.ToLower() cannot be recovered.
+                </Text>
+            </StackItem>
+            <StackItem Tokens="@(new StackItemTokens { Margin= "1rem 0" })">
+                <Text Variant="TextType.Small">
+                    Are you sure that you want to delete this @Entity?
+                </Text>
+            </StackItem>
+            <StackItem ClassName="action-button">
+                <PrimaryButton OnClick="@(async()=> await DeleteClick())">Delete</PrimaryButton>
+            </StackItem>
+        </Stack>
+    </Stack>
+}

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SwiftCaps": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

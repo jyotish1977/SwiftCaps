@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>SwiftCAPS.Quiz.Web</id>
+    <version>1.0</version>
+    <authors>Xamariners</authors>
+    <description>SwiftCAPS Quiz WebApp</description>
+  </metadata>
+</package>

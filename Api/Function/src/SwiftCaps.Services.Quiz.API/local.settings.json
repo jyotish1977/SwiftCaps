@@ -1,0 +1,18 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+    "Audience": "https://swiftcaps.api",
+    "ApplicationId": "set in secrets",
+    "Clients": "set in secrets",
+    "TenantId": "set in secrets",
+    "ScDbConnection": "set in secrets",
+    "RaygunApiKey": "set in secrets"
+  },
+  "Host": {
+    "LocalHttpPort": 7072,
+    "CORS": "*",
+    "CORSCredentials": false
+  }
+}

@@ -1,0 +1,145 @@
+﻿<Panel IsOpen=@_isPanelOpen
+       IsLightDismiss="false"
+       OnDismiss=@PanelDismissHandler
+       Type="PanelType.Medium">
+    <NavigationTemplate>
+        <Stack Horizontal="true" Tokens="@(new StackTokens { Padding = ".5rem" })" HorizontalAlign="Alignment.End">
+            <StackItem Align="Alignment.End">
+                <IconButton OnClick=@(() => OnScheduleReload()) IconName="Refresh" />
+                <IconButton OnClick=@PanelDismissHandler IconName="ChromeClose" />
+            </StackItem>
+        </Stack>
+    </NavigationTemplate>
+    <ChildContent>
+
+        @if (_isBusy)
+        {
+            <Spinner Size=@SpinnerSize.Large Label="Loading..." />
+        }
+
+        @if (_showErrorMessage)
+        {
+            <MessageBar MessageBarType="MessageBarType.Error" IsMultiline="false">
+                @_scheduleSaveError
+            </MessageBar>
+        }
+
+        @if (_canShowGrid)
+        {
+            <Stack Tokens="@(new StackTokens { Padding = new CssValue(25.0) })">
+                <Stack ClassName="mb-10" Horizontal="true">
+                    <StackItem Grow="1" Tokens="@(new StackItemTokens { Margin = new CssValue(10.0) })">
+                        <BlazorFluentUI.Persona Text="@_schedule.Quiz?.Name"
+                                                HidePersonaDetails="true"
+                                                InitialsColor=PersonaInitialsColor.Magenta
+                                                Presence=@PersonaPresenceStatus.None
+                                                Size=@PersonaSize.Size100 />
+                    </StackItem>
+                    <StackItem Grow="6" ClassName="schedule-panel-column-section">
+                        <Stack Tokens="@(new StackTokens { ChildrenGap = new[] {10.0} })">
+                            <Text Variant="TextType.XLargePlus">@_schedule.Quiz?.Name</Text>
+                            <Text Variant="TextType.Medium">
+                                @(_schedule.ScheduleGroups?.Count() ?? 0) Groups
+                            </Text>
+
+                            <Stack Horizontal="true" Style="margin:0;">
+                                <ActionButton IconName="Delete" Style="padding:0;"
+                                              OnClick="OnScheduleDelete">Delete Schedule</ActionButton>
+                            </Stack>
+                        </Stack>
+                    </StackItem>
+                </Stack>
+                <Pivot OnLinkClick="OnPivotClick" @bind-SelectedKey="@_activeScheduleDetailTab">
+                    <PivotItem ItemKey="@DetailsPivotType.General.ToString()" HeaderText="General">
+                        <Stack Tokens=@(new StackTokens { ChildrenGap = new[] {10.0}, Padding = "3.6rem 0.8rem" })>
+
+                            <Stack Horizontal="true">
+                                <StackItem Grow="3">
+                                    <Label>Quiz</Label>
+                                    <Text As="div" style="width: 280px; display: block;">@_schedule.Quiz?.Name</Text>
+                                </StackItem>
+
+                                <StackItem Grow="3">
+                                    <Label>Start Date</Label>
+                                    <Text>@_schedule.StartTime?.ToString("dd/MM/yyyy")</Text>
+                                </StackItem>
+                            </Stack>
+
+                            <Stack Horizontal="true">
+                                <StackItem Grow="3">
+                                    <Label>Recurrence</Label>
+                                    <Text As="div" style="width: 280px; display: block;">@_schedule.Recurrence</Text>
+                                </StackItem>
+
+                                <StackItem Grow="3">
+                                    <Label>End Date</Label>
+                                    <Text>@_schedule.EndTime?.ToString("dd/MM/yyyy")</Text>
+                                </StackItem>
+                            </Stack>
+
+                            <StackItem Tokens="@(new StackItemTokens { Margin = "3rem 0" })">
+                                <Label>Created On</Label>
+                                <Text>@_schedule.Created.ToLocalTime().ToString("dd/MM/yyyy, hh:mm tt")</Text>
+                            </StackItem>
+
+                </Stack>
+            </PivotItem>
+            <PivotItem ItemKey="@DetailsPivotType.Questions.ToString()" HeaderText="Groups">
+
+                        @if (_schedule.ScheduleGroups == null || _schedule.ScheduleGroups.Count() == 0)
+                        {
+                            <Stack ClassName="mt-25" Grow="1">
+                                <MessageBar>
+                                    Schedule does not have Groups. Add a group
+                                </MessageBar>
+                                <StackItem Tokens="@(new StackItemTokens { Margin = "1rem 0" })">
+                                      <a  class="btn-link"  style="cursor:pointer;text-decoration:none;" @onclick="OnManageGroupsClick">Manage Groups</a>
+                                </StackItem>
+                            </Stack>
+                        }
+                        else
+                        {
+                            <Stack Tokens=@(new StackTokens { ChildrenGap = new[] {10.0}, Padding = "3.6rem 0.8rem" })>
+                                <StackItem Tokens="@(new StackItemTokens { Margin = "1rem 0" })">
+                                    <span class="ms-fontSize-16 ms-fontWeight-semibold">Groups (@(_schedule.ScheduleGroups.Count()))</span>
+                                </StackItem>
+                                @foreach (var item in _schedule.ScheduleGroups.Take(_groupItemDisplayCount))
+                                {
+                                    <StackItem Tokens="@(new StackItemTokens { Margin = "0 0 0.2rem 0" })">
+                                        <Text Variant="TextType.Medium">@item.Group?.Name</Text>
+                                    </StackItem>
+                                }
+                                @if (_schedule.ScheduleGroups.Count() > _groupItemDisplayCount)
+                                {
+                                    <StackItem Tokens="@(new StackItemTokens { Margin = "0 0 0.2rem 0" })">
+                                        <Text Variant="TextType.Medium">@(_schedule.ScheduleGroups.Count() - _groupItemDisplayCount) more</Text>
+                                    </StackItem>
+                                }
+                                <StackItem Tokens="@(new StackItemTokens { Margin = "1rem 0" })">
+                                     <a  class="btn-link"  style="cursor:pointer;text-decoration:none;" @onclick="OnManageGroupsClick">Manage Groups</a>
+                                </StackItem>
+                            </Stack>
+
+                }
+
+                    </PivotItem>
+                </Pivot>
+
+                @if (_activeScheduleDetailTab == @DetailsPivotType.General.ToString())
+                {
+                    <StackItem Tokens="@(new StackItemTokens { Margin = "0 0 0 0.8rem" })" ClassName="action-button">
+                        <DefaultButton ClassName="btn-default-blue" Text="Edit" OnClick="EditDetail" />
+                    </StackItem>
+                }
+                <ScheduleGroups @ref="_scheduleGroups" OnNavigationBackCallback="NavigationBackHandler" OnCloseCallback="CloseHandler"></ScheduleGroups>
+            </Stack>
+
+            <UpsertSchedule @ref="upsertPanel"
+                            OnNavigationBackCallback="UpsertNavigationBackHandler"
+                            OnCloseCallback="UpsertCloseHandler"></UpsertSchedule>
+        
+            <DeletePanel @ref="deletePanel" OnCloseCallback="PanelDismissHandler" OnDeleteCallback="DeleteHandler"></DeletePanel>
+        }
+
+    </ChildContent>
+</Panel>

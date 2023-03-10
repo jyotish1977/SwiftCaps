@@ -1,0 +1,22 @@
+﻿.text-left {
+    text-align: left;
+}
+
+.disable-text .display-text {
+    color: var(--semanticTextColors-DisabledBodyText);
+}
+
+.groups-container {
+    height: calc(100vh - 12.5rem);
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 1.5rem;
+    width: 16rem;
+}
+
+.report-container {
+    height: calc(100vh - 9rem);
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 1.5rem;
+}

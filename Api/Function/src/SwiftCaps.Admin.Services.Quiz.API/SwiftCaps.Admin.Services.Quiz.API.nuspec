@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>SwiftCaps.Services.QuizAdmin</id>
+    <version>0.0.1</version>
+    <authors>Xamariners</authors>
+    <owners>Xamariners</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>SwiftCaps Services - Quiz Admin API</description>
+    <copyright>Copyright 2020</copyright>
+    <tags>Quiz Admin</tags>
+  </metadata>
+</package>

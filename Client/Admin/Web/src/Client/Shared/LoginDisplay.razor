@@ -1,0 +1,10 @@
+﻿@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+
+<AuthorizeView>
+    <Authorized>
+        <SwiftCAPS.Blazor.Components.Persona UserName="@context.User.Identity.Name" Email="@(GetEmail(context))" OnSignout="@BeginLogout" />
+    </Authorized>
+    <NotAuthorized>
+        <a href="authentication/login">Log in</a>
+    </NotAuthorized>
+</AuthorizeView>

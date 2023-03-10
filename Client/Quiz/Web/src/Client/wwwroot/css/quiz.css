@@ -1,0 +1,148 @@
+﻿/* Quiz Card*/
+.quizCard {
+    max-width: 480px !important;
+}
+
+.quizCardContainer {
+    padding-top: 20px;
+}
+
+.quizCardName {
+    font-weight: bold;
+}
+
+.quizCardDescriptionText {
+    color: #6b6b6b;
+    padding-top: 20px;
+}
+
+.quizCardButton {
+    width: 100%;
+    text-align: center;
+    color: white !important;
+}
+
+.quizCardTitle {
+    text-align: end;
+    font-weight: bold !important;
+}
+
+.quizCardCompletedButton {
+    background-color: #576A86;
+}
+
+.quizCardCompletedTitle {
+    color: #576A86;
+}
+
+.quizCardWeeklyButton {
+    background-color: #2F91DE !important;
+}
+
+.quizCardWeeklyTitle {
+    color: #2F91DE !important;
+}
+
+.quizCardMonthlyButton {
+    background-color: #CAA116 !important;
+}
+
+.quizCardMonthlyTitle {
+    color: #CAA116 !important;
+}
+
+.quizCardSectionTitle {
+    color: #000000;
+    opacity: 0.5;
+}
+
+.is-error input.ms-TextField-field {
+    background-color: #FFE6E6;
+}
+
+/* Carousel */
+.carousel {
+    position: fixed;
+    max-width: 480px;
+    box-sizing: border-box;
+    height: 100%;
+    width: 100%;
+}
+
+.carouselWrapper {
+    position: absolute;
+    left: 0;
+    right: 0;
+}
+
+.carouselItems {
+    position: relative;
+    display: flex;
+    overflow-x: scroll;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+}
+
+.carouselItems::-webkit-scrollbar {
+    display: none;
+}
+
+.carouselItem {
+    scroll-snap-align: start;
+    position: relative;
+    flex: 0 0 100%;
+}
+
+.carouselMetaWrapper {
+    display: flex;
+    margin-top: 10px;
+}
+
+.carouselSectionInfo {
+    flex: 1;
+}
+
+.carouselPaging {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.carouselPagingItem {
+    width: 1rem;
+    height: 1rem;
+    background-color: #D1D5DA;
+    border-radius: 50%;
+    display: inline-block;
+    font-size: 0;
+    margin-right: 5px;
+    transition: all 500ms ease-out;
+}
+
+.carouselPagingItem.is-active {
+    background-color: #CAA116;
+}
+
+.carouselQuestionInfo {
+    flex: 1;
+    display: flex !important;
+    justify-content: flex-end;
+}
+
+.carouselNavPrev,
+.carouselNavNext {
+    position: absolute;
+    top: 50%;
+    width: 2rem;
+    height: 2rem;
+    text-align: center;
+}
+
+.carouselNavPrev {
+    left: 0;
+}
+
+.carouselNavNext {
+    right: 0;
+}

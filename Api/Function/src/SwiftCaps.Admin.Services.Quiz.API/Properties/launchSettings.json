@@ -1,0 +1,8 @@
+﻿{
+  "profiles": {
+    "SwiftCaps.Admin.Services.Quiz.API": {
+      "commandName": "Project",
+      "commandLineArgs": "host start -p 7071"
+    }
+  }
+}

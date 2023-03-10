@@ -1,0 +1,45 @@
+﻿    <LayerHost>
+    <Panel IsOpen=@IsAppPanelOpen
+              OnDismiss=@PanelDismiss
+              Type=@PanelType.SmallFixedNear
+              IsLightDismiss="false"
+              Style="color:#000;">
+        <Stack>
+            <StackItem Style="margin-top: 2em">
+                <Text Variant="@TextType.XLarge">Apps</Text>
+            </StackItem>
+
+            @if (Applications == null || Applications.Count == 0)
+            {
+                <text>
+                    <Text Variant="@TextType.Medium" Style="text-align: center">No apps found.</Text>
+                </text>
+            }
+            else
+            {
+                @foreach (var item in Applications)
+                {
+
+                    <a href="@item.Url" class="applink">
+
+                        <Stack Horizontal="true" VerticalAlign="@Alignment.Center" Style="margin-top: 2em">
+
+                            <img src="img/@item.Icon" width="19" />
+
+                            <span style="padding-left: 1.5em" class="appname">
+
+                                @item.DisplayName
+
+                            </span>
+
+                        </Stack>
+
+                    </a>
+
+                }
+
+            }
+
+        </Stack>
+    </Panel>
+</LayerHost>

@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Shared\SwiftCaps.Helpers\SwiftCaps.Helpers.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\SwiftCaps.Models\SwiftCaps.Models.csproj" />
+    <ProjectReference Include="..\..\..\Quiz\Mobile\src\Lib\SwiftCaps.Client.Core\SwiftCaps.Client.Core.csproj" />
+  </ItemGroup>
+
+</Project>

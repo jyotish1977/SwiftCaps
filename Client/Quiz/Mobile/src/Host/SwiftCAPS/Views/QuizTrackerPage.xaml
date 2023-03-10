@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<infrastructure:BaseContentPage
+    x:Class="SwiftCaps.Views.QuizTrackerPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:extensions="clr-namespace:SwiftCaps.Extensions;assembly=SwiftCaps"
+    xmlns:infrastructure="clr-namespace:SwiftCaps.Infrastructure;assembly=SwiftCaps"
+    xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:sys="clr-namespace:System;assembly=netstandard"
+    xmlns:converters="clr-namespace:SwiftCaps.Converters;assembly=SwiftCaps"
+    Title="QUIZ TRACKER"
+    ios:Page.UseSafeArea="true"
+    BackgroundColor="{StaticResource Primary}"
+    BindingContext="{Binding QuizTrackerPage, Source={StaticResource Locator}}"
+    ControlTemplate="{StaticResource PageHeaderControlTemplate}"
+    Shell.NavBarIsVisible="False"
+    Shell.TabBarIsVisible="False"
+    mc:Ignorable="d">
+    <ContentPage.Content>
+        <Frame
+            Margin="20"
+            BackgroundColor="White"
+            CornerRadius="5">
+
+            <CollectionView
+                ios:ListView.SeparatorStyle="FullWidth"
+                BackgroundColor="White"
+                ItemsSource="{Binding LeaderBoardList}"
+                SelectionMode="None">
+                <CollectionView.EmptyView>
+                    <StackLayout IsVisible="{Binding Movements, Converter={converters:ListIsNullOrEmptyConverter}}">
+                        <Label HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">No LeaderBoard Available</Label>
+                    </StackLayout>
+                </CollectionView.EmptyView>
+                <CollectionView.Header>
+                    <Grid HeightRequest="40">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="60" />
+                            <ColumnDefinition Width="60" />
+                        </Grid.ColumnDefinitions>
+                        <Label
+                            Grid.Column="0"
+                            Style="{StaticResource DefaultLabelStyle}"
+                            Text="{Binding Source={x:Static sys:DateTime.Now}, StringFormat='Quizzes For {0:MMMM}'}"
+                            TextColor="{StaticResource GrayTextColor}"
+                            VerticalOptions="Center" />
+                        <!--  Text="Quizzes For July"  -->
+                        <Label
+                            Grid.Column="1"
+                            HorizontalOptions="Center"
+                            Style="{StaticResource DefaultLabelStyle}"
+                            Text="W"
+                            TextColor="{StaticResource GrayTextColor}"
+                            VerticalOptions="Center" />
+                        <Label
+                            Grid.Column="2"
+                            HorizontalOptions="Center"
+                            Style="{StaticResource DefaultLabelStyle}"
+                            Text="M"
+                            TextColor="{StaticResource GrayTextColor}"
+                            VerticalOptions="Center" />
+                    </Grid>
+                </CollectionView.Header>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                     
+                        <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="40" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="60" />
+                                    <ColumnDefinition Width="60" />
+                                </Grid.ColumnDefinitions>
+                                <Label
+                                    Grid.Column="0"
+                                    Style="{StaticResource DefaultLabelStyle}"
+                                    Text="{Binding UserName}"
+                                    VerticalOptions="Center" />
+                                <StackLayout
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    BindableLayout.ItemsSource="{Binding WeeklyQuizReports}"
+                                    HorizontalOptions="Center"
+                                    Orientation="Horizontal">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <Image
+                                                HeightRequest="15"
+                                                Source="{Binding IsCompleted, Converter={StaticResource leaderBoardQuizStatusConverter}}"
+                                                VerticalOptions="Center"
+                                                WidthRequest="15" />
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </StackLayout>
+                                <StackLayout
+                                    Grid.Row="0"
+                                    Grid.Column="2"
+                                    BindableLayout.ItemsSource="{Binding MonthlyQuizReports}"
+                                    HorizontalOptions="Center"
+                                    Orientation="Horizontal">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <Image
+                                                HeightRequest="15"
+                                                Source="{Binding IsCompleted, Converter={StaticResource leaderBoardQuizStatusConverter}}"
+                                                VerticalOptions="Center"
+                                                WidthRequest="15" />
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </StackLayout>
+                                <BoxView
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="3"
+                                    BackgroundColor="{StaticResource ListViewSeparatorColor}"
+                                    HeightRequest="0.5" />
+                            </Grid>
+                      
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Frame>
+    </ContentPage.Content>
+</infrastructure:BaseContentPage>

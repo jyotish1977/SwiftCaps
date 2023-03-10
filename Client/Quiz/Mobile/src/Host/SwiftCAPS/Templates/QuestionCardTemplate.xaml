@@ -1,0 +1,223 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentView
+    x:Class="SwiftCaps.Templates.QuestionCardTemplate"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:behaviors="clr-namespace:Xamariners.Mobile.Core.Behaviors;assembly=Xamariners.Mobile.Core"
+    xmlns:controls="clr-namespace:SwiftCaps.Controls;assembly=SwiftCaps"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:extensions="clr-namespace:SwiftCaps.Extensions;assembly=SwiftCaps"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:triggers="clr-namespace:SwiftCaps.Triggers;assembly=SwiftCaps"
+    xmlns:effects="http://xamarin.com/schemas/2020/toolkit"
+    x:Name="QuestionCardRef"
+    mc:Ignorable="d">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <Style x:Key="TextsLayout" TargetType="StackLayout">
+                <Setter Property="Padding" Value="32,7,32,0" />
+                <Setter Property="Spacing" Value="0" />
+            </Style>
+
+            <Style x:Key="InfoLabel" TargetType="Label">
+                <Setter Property="FontSize" Value="15" />
+                <Setter Property="Opacity" Value="0.5" />
+                <Setter Property="FontFamily" Value="{StaticResource FontFamilyDefault}" />
+            </Style>
+
+            <Style
+                x:Key="BottomRemarksLabel"
+                BasedOn="{StaticResource InfoLabel}"
+                TargetType="Label">
+                <Setter Property="Opacity" Value="0.8" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style
+                x:Key="TextsSpacing"
+                BasedOn="{StaticResource InfoLabel}"
+                TargetType="Label">
+                <Setter Property="Margin" Value="0,16,0,0" />
+            </Style>
+
+            <Style x:Key="ValueLabel" TargetType="Label">
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="FontFamily" Value="{StaticResource FontFamilyDefault}" />
+            </Style>
+
+            <Style x:Key="InactiveButton" TargetType="Button">
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="#D1D5DA" />
+            </Style>
+
+            <Style x:Key="ActiveButton" TargetType="Button">
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="{StaticResource BlueColor}" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <ContentView.Content>
+        <Frame
+            Margin="10"
+            Padding="0"
+            CornerRadius="5">
+            <Grid RowSpacing="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="4" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <ScrollView Grid.Row="0" Margin="0,0,0,3">
+                    <Grid
+                        Margin="0,10,10,0"
+                        ColumnSpacing="0"
+                        RowSpacing="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="25" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="25" />
+                        </Grid.ColumnDefinitions>
+                        <ImageButton
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            BackgroundColor="Transparent"
+                            Command="{Binding OpenInfoCommand, Source={x:Reference QuestionCardRef}}"
+                            HeightRequest="25"
+                            Source="{extensions:ImageResource SwiftCaps.Resources.Images.info.png}"
+                            WidthRequest="25" />
+
+                        <StackLayout
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                            Style="{StaticResource TextsLayout}">
+                            <Label
+                                x:Name="SectionHeaderLabel"
+                                IsVisible="{Binding HasDescription}"
+                                Style="{StaticResource InfoLabel}"
+                                Text="Section" />
+
+                            <Label
+                                x:Name="SectionLabel"
+                                FontAttributes="Bold"
+                                IsVisible="{Binding HasDescription}"
+                                Style="{StaticResource ValueLabel}"
+                                Text="{Binding Description}" />
+
+                            <Label
+                                x:Name="HeaderLabel"
+                                IsVisible="{Binding HasHeader}"
+                                Style="{StaticResource ValueLabel}"
+                                Text="{Binding Header}" />
+
+                            <Label
+                                x:Name="QuestionHeaderLabel"
+                                Style="{StaticResource TextsSpacing}"
+                                Text="Question" />
+
+                            <!--  Used for Inline Question - Answer Layout  -->
+                            <FlexLayout
+                                x:Name="InlineAnswerQuestionLayout"
+                                Margin="0,12,0,12"
+                                AlignContent="Center"
+                                AlignItems="Center"
+                                Direction="Row"
+                                Wrap="Wrap" />
+
+                            <!--  Used for Separate Question - Answer Layout  -->
+                            <Label
+                                x:Name="SeparateAnswerQuestionLabel"
+                                LineBreakMode="WordWrap"
+                                Style="{StaticResource ValueLabel}"
+                                VerticalTextAlignment="Start" />
+
+                            <Label
+                                x:Name="FooterLabel"
+                                IsVisible="{Binding HasFooter}"
+                                Style="{StaticResource BottomRemarksLabel}"
+                                Text="{Binding Footer}" />
+
+                            <Label
+                                x:Name="AnswersHeaderLabel"
+                                Style="{StaticResource TextsSpacing}"
+                                Text="Answers" />
+
+                            <!--  Used for Separate Question - Answer Layout  -->
+                            <StackLayout x:Name="AnswerListCollectionView" Margin="0,12,0,0">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate>
+                                        <Entry
+                                            Margin="0,0,0,12"
+                                            BackgroundColor="{StaticResource EntryBackgroundColor}"
+                                            HeightRequest="45"
+                                            Placeholder="{Binding AnswerIndex}"
+                                            Text="{Binding UserAnswer}">
+                                            <!--  TODO: check validity on lost focus  -->
+                                            <Entry.Triggers>
+                                                <DataTrigger
+                                                    Binding="{Binding IsValid}"
+                                                    TargetType="Entry"
+                                                    Value="False">
+                                                    <DataTrigger.Setters>
+                                                        <!--  Set up Trigger for Answer Validation Color  -->
+                                                        <Setter Property="BackgroundColor" Value="#ffe6e6" />
+                                                    </DataTrigger.Setters>
+                                                    <DataTrigger.ExitActions>
+                                                        <!--  Set up Trigger for Focus next Entry  -->
+                                                        <triggers:AnswerValidTriggerAction QuizAnswersLayoutStyle="Separate" />
+                                                    </DataTrigger.ExitActions>
+                                                </DataTrigger>
+                                            </Entry.Triggers>
+                                            <Entry.Behaviors>
+                                                <behaviors:EventToCommandBehavior Command="{Binding AnswerUnfocusedCommand, Source={x:Reference QuestionCardRef}}" EventName="Unfocused" />
+                                            </Entry.Behaviors>
+                                        </Entry>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </StackLayout>
+                        </StackLayout>
+                    </Grid>
+                </ScrollView>
+
+                <!--  BUTTON - Submit Section  -->
+                <Button
+                    Grid.Row="1"
+                    Grid.RowSpan="2"
+                    Command="{Binding SubmitCommand, Source={x:Reference QuestionCardRef}}"
+                    FontFamily="{StaticResource FontFamilySemiBold}"
+                    FontSize="{StaticResource FontSizeButton}"
+                    Text="Submit Section"
+                    VerticalOptions="EndAndExpand">
+                <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Normal">
+                                <VisualState.Setters>
+                                    <Setter Property="Style" Value="{StaticResource ActiveButton}" />
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Disabled">
+                                <VisualState.Setters>
+                                    <Setter Property="Style" Value="{StaticResource InactiveButton}" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateManager.VisualStateGroups>
+                </Button>
+                <controls:GradientFrame
+                    Grid.Row="1"
+                    CornerRadius="0"
+                    EndColor="{Binding Source={x:Reference QuestionCardRef}, Path=AccentColor}"
+                    Opacity="0.5"
+                    StartColor="#4E000000" />
+            </Grid>
+        </Frame>
+    </ContentView.Content>
+</ContentView>

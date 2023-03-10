@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SwiftCaps.Services.Reporting.API": {
+      "commandName": "Project",
+      "commandLineArgs": "host start -p 7073"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+parameters:
+- name: azConnection # Azure Service Connection
+  type: string 
+  default: false
+- name: appName # Name of App to deploy
+  type: string 
+  default: false  
+- name: resourceGroup # Name of App to deploy
+  type: string 
+  default: false    
+- name: package # Name of App to deploy
+  type: string 
+  default: false
+
+steps:
+  - task: AzureFunctionApp@1
+    displayName: 'Deploy Fx App'
+    inputs:
+      azureSubscription: ${{ parameters.azConnection }}
+      appType: functionApp
+      appName: '${{ parameters.appName }}'
+      resourceGroupName: '${{ parameters.resourceGroup}}'
+      package: ${{ parameters.package }}

@@ -1,0 +1,108 @@
+﻿@page "/reporting/leaderBoard"
+
+
+<Stack Tokens=@(new StackTokens { Padding = "0 1rem" })>
+    <StackItem>
+        <Stack ClassName="page-header">
+            <Text As="p" Variant="TextType.XLargePlus">Leaderboard</Text>
+        </Stack>
+
+        @if (_isBusy)
+        {
+            <Stack Tokens=@(new StackTokens { Padding = "1rem 0" })>
+                <Spinner Size=@SpinnerSize.Large Label="Loading..." />
+            </Stack>
+        }
+
+        @if (_showErrorMessage)
+        {
+            <Stack Tokens=@(new StackTokens { Padding = "1rem 0" })>
+                <StackItem>
+                    <div class="ms-Grid-col ms-sm12 ms-mdOffset2 ms-md8">
+                        <MessageBar MessageBarType="MessageBarType.Error" IsMultiline="false">
+                            @_leaderboardError
+                        </MessageBar>
+                    </div>
+                </StackItem>
+            </Stack>
+        }
+
+        @if (_showInfoMessage)
+        {
+            <Stack Tokens=@(new StackTokens { Padding = "1rem 0" })>
+                <StackItem>
+                    <div class="ms-Grid-col ms-sm12 ms-mdOffset2 ms-md8">
+                        <MessageBar MessageBarType="MessageBarType.Info" IsMultiline="false">
+                            @_leaderboardInfoMessage
+                        </MessageBar>
+                    </div>
+                </StackItem>
+            </Stack>
+        }
+
+        @if (_canShowGrid)
+        {
+            <Stack Tokens="@(new StackTokens { Padding = "0 1rem", ChildrenGap = new[] { 60.0 } })" Horizontal="true">
+                <StackItem>
+
+                    <Stack>
+                        <StackItem Tokens="@(new StackItemTokens { Margin = "1.7rem 0 0.6rem 1rem" })">
+                            <Text Variant="TextType.Medium">Groups</Text>
+                        </StackItem>
+                        <StackItem>
+                            <div class="groups-container">
+
+                                @foreach (var group in _groups)
+                                {
+                                    <ActionButton ClassName="@(group.Id == _selectedGroup ? "" : "disable-text")" @key="@group.Id" OnClick="@(() => OnGroupClick(group.Id))">
+                                        <BlazorFluentUI.Persona Text="section.Description.ToPersonaFormat()"
+                                                                HidePersonaDetails="true"
+                                                                InitialsColor=PersonaInitialsColor.LightGreen
+                                                                Presence=@PersonaPresenceStatus.None
+                                                                Size=@PersonaSize.Size24 />
+                                        &nbsp;&nbsp;
+                                        <span class="display-text text-left">@group.Name</span>
+                                    </ActionButton><br />
+                                }
+
+                            </div>
+                        </StackItem>
+                    </Stack>
+                </StackItem>
+
+                @if (_isLeaderboardLoading)
+                {
+                    <StackItem Style="width: 100%;" Tokens="@(new StackItemTokens { Margin = "1rem" })">
+                        <Spinner Size=@SpinnerSize.Large Label="Loading leaderboard..." />
+                    </StackItem>
+                }
+                else
+                {
+                    <StackItem Style="width: 100%;">
+                        <div class="report-container">
+                            @if (_leaderboards != null && _leaderboards.Count() == 0)
+                            {
+                                <Stack Tokens="@(new StackTokens { Padding = "4rem" })">
+                                    <MessageBar MessageBarType="MessageBarType.Info" IsMultiline="false">
+                                        No LeaderBoard data for selected Group.
+                                    </MessageBar>
+                                </Stack>
+                            }
+                            else
+                            {
+                                <DetailsList ItemsSource="_leaderboards"
+                                             GetKey=@(item => item.UserId)
+                                             IsVirtualizing="true"
+                                             Columns="_columns"
+                                             LayoutMode="BlazorFluentUI.Lists.DetailsListLayoutMode.Justified"
+                                             TItem="ReportingLeaderboardViewModel"
+                                             Compact=false
+                                             SelectionMode="SelectionMode.None" />
+                            }
+                        </div>
+                    </StackItem>
+                }
+            </Stack>
+        }
+    </StackItem>
+</Stack>

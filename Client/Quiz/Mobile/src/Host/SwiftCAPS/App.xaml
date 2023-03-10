@@ -1,0 +1,169 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Application
+    x:Class="SwiftCaps.App"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:SwiftCaps.Controls;assembly=SwiftCaps"
+    xmlns:converters="clr-namespace:SwiftCaps.Converters"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:extensions="clr-namespace:SwiftCaps.Extensions;assembly=SwiftCaps"
+    xmlns:helpers="clr-namespace:SwiftCaps.Helpers"
+    xmlns:infrastructure="clr-namespace:SwiftCaps.ViewModels.Infrastructure;assembly=SwiftCaps"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:templates="clr-namespace:SwiftCaps.Templates;assembly=SwiftCaps"
+    xmlns:xamconverters="clr-namespace:Xamariners.Mobile.Core.Converters;assembly=Xamariners.Mobile.Core"
+    mc:Ignorable="d">
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <infrastructure:ViewModelLocator x:Key="Locator" />
+            <converters:LeaderBoardQuizStatusConverter x:Key="leaderBoardQuizStatusConverter" />
+            <converters:MaximumIndicatorVisibleConverter x:Key="maximumIndicatorVisibleConverter" />
+
+            <!--  Colors  -->
+            <Color x:Key="Primary">#152744</Color>
+            <Color x:Key="BlueColor">#2F91DE</Color>
+            <Color x:Key="WhiteColor">#FFFFFF</Color>
+            <Color x:Key="GrayTextColor">#6b6b6b</Color>
+            <Color x:Key="AccentColor">#D0021B</Color>
+            <Color x:Key="MustardColor">#CAA116</Color>
+            <Color x:Key="DarkMustardColor">#F0C01F</Color>
+            <Color x:Key="CompletedColor">#576A86</Color>
+            <Color x:Key="CompletedOverlayColor">#65727D8E</Color>
+            <Color x:Key="BlackColor">#000000</Color>
+            <Color x:Key="MessageOkAlertButtonColor">#EE4B4B</Color>
+            <Color x:Key="MessageOkAlertButtonBorderColor">#979797</Color>
+            <Color x:Key="CarouselInactiveIndicatorDotColor">#D1D5DA</Color>
+            <Color x:Key="CarouselActiveIndicatorDotColor">#F0C01F</Color>
+            <Color x:Key="QuizPageBackgroundColor">#0A2241</Color>
+            <Color x:Key="CarouselDotBorderColor">#979797</Color>
+            <Color x:Key="EntryBackgroundColor">#F6F6F8</Color>
+            <Color x:Key="ListViewSeparatorColor">#D8D8D8</Color>
+
+            <!--  Fonts family  -->
+            <OnPlatform x:Key="FontFamilyDense" x:TypeArguments="x:String">
+                <On Platform="Android" Value="DINCondensedBold.ttf#DIN Condensed" />
+                <On Platform="iOS" Value="DIN Condensed" />
+            </OnPlatform>
+            <OnPlatform x:Key="FontFamilyDefault" x:TypeArguments="x:String">
+                <On Platform="Android" Value="SFProTextRegular.otf#SF Pro Text" />
+                <On Platform="iOS" Value="SF Pro Text" />
+            </OnPlatform>
+            <OnPlatform x:Key="FontFamilySemiBold" x:TypeArguments="x:String">
+                <On Platform="Android" Value="SFProDisplaySemibold.otf#SF Pro Display" />
+                <On Platform="iOS" Value="SF Pro Display" />
+            </OnPlatform>
+            <!--  Font size  -->
+            <x:Double x:Key="FontSizeMedium">15</x:Double>
+            <x:Double x:Key="FontSizeLarge">18</x:Double>
+            <x:Double x:Key="FontSizeButton">16</x:Double>
+            <x:Double x:Key="FontSizeMenu">21</x:Double>
+            <x:Double x:Key="FontSizeTooLarge">36</x:Double>
+
+            <OnPlatform x:Key="FontSizeTestTitle" x:TypeArguments="x:Double">
+                <On Platform="Android" Value="{x:Static helpers:FontSizeHelpers.TitleFontSize}" />
+                <On Platform="iOS" Value="{x:Static helpers:FontSizeHelpers.TitleFontSize}" />
+            </OnPlatform>
+
+            <x:Double x:Key="FontSizeTestType">19</x:Double>
+
+            <!--  Test Card styles  -->
+            <Style x:Key="WeeklyTestCardStyle" TargetType="templates:QuizCardTemplate">
+                <Setter Property="AccentColor" Value="{StaticResource BlueColor}" />
+                <Setter Property="Title" Value="WEEK {0} QUIZ" />
+                <Setter Property="TitleImage" Value="{extensions:ImageResource SwiftCaps.Resources.Images.weeklyTestIcon.png}" />
+                <Setter Property="ButtonText" Value="Start Quiz" />
+            </Style>
+
+            <Style x:Key="MonthlyTestCardStyle" TargetType="templates:QuizCardTemplate">
+                <Setter Property="AccentColor" Value="{StaticResource MustardColor}" />
+                <Setter Property="Title" Value="MONTH {0} QUIZ" />
+                <Setter Property="TitleImage" Value="{extensions:ImageResource SwiftCaps.Resources.Images.monthlyTestIcon.png}" />
+                <Setter Property="ButtonText" Value="Start Quiz" />
+            </Style>
+
+            <Style x:Key="CompletedTestCardStyle" TargetType="templates:QuizCardTemplate">
+                <Setter Property="AccentColor" Value="{StaticResource CompletedColor}" />
+                <Setter Property="TitleImage" Value="{extensions:ImageResource SwiftCaps.Resources.Images.completedTestIcon.png}" />
+                <Setter Property="ButtonText" Value="Complete" />
+            </Style>
+
+            <!--  Message Ok alert pop up style  -->
+            <Style x:Key="MessageOkAlertTitleStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="{StaticResource BlackColor}" />
+                <Setter Property="FontFamily" Value="{StaticResource FontFamilyDense}" />
+                <Setter Property="FontSize" Value="30" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+            <Style x:Key="MessageOkAlertMessageStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="{StaticResource BlackColor}" />
+                <Setter Property="FontFamily" Value="{StaticResource FontFamilyDefault}" />
+                <Setter Property="Opacity" Value="0.5" />
+            </Style>
+            <Style x:Key="MessageOkAlertButtonStyle" TargetType="Button">
+                <Setter Property="BorderWidth" Value="0" />
+                <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+                <Setter Property="VerticalOptions" Value="FillAndExpand" />
+                <Setter Property="CornerRadius" Value="0" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="FontFamily" Value="{StaticResource FontFamilySemiBold}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource MessageOkAlertButtonColor}" />
+                <Setter Property="TextColor" Value="{StaticResource WhiteColor}" />
+                <Setter Property="FontSize" Value="{StaticResource FontSizeMedium}" />
+                <Setter Property="HeightRequest" Value="45" />
+            </Style>
+
+            <Style
+                x:Key="CompletedWeeklyTestStyle"
+                BasedOn="{StaticResource CompletedTestCardStyle}"
+                TargetType="templates:QuizCardTemplate">
+                <Setter Property="Title" Value="WEEK {0} QUIZ" />
+            </Style>
+
+            <Style
+                x:Key="CompletedMonthlyTestStyle"
+                BasedOn="{StaticResource CompletedTestCardStyle}"
+                TargetType="templates:QuizCardTemplate">
+                <Setter Property="Title" Value="MONTH {0} QUIZ" />
+            </Style>
+
+            <!--  Quiz Page Style  -->
+            <Style x:Key="QuizPageFooterTextStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="{StaticResource WhiteColor}" />
+                <Setter Property="FontFamily" Value="{StaticResource FontFamilySemiBold}" />
+                <Setter Property="FontSize" Value="{StaticResource FontSizeMedium}" />
+            </Style>
+
+            <Style x:Key="DefaultLabelStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="{StaticResource FontSizeMedium}" />
+                <Setter Property="FontFamily" Value="{StaticResource FontFamilyDefault}" />
+            </Style>
+            <Style x:Key="HeadingTextStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="{StaticResource FontSizeButton}" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontFamily" Value="{StaticResource FontFamilySemiBold}" />
+            </Style>
+            <Style x:Key="HeadingButtonStyle" TargetType="Button">
+                <Setter Property="FontSize" Value="{StaticResource FontSizeButton}" />
+                <Setter Property="FontFamily" Value="{StaticResource FontFamilySemiBold}" />
+            </Style>
+            <!--  Page style  -->
+            <Style ApplyToDerivedTypes="True" TargetType="ContentPage" />
+            <!--  Converters  -->
+            <xamconverters:InverseBooleanConverter x:Key="inverseBooleanConv" />
+            <!--  Control template  -->
+            <controls:PageHeaderControlTemplate x:Key="PageHeaderControlTemplate" />
+
+            <!--  Carousel Indicator Dots Style  -->
+            <Style x:Key="ActiveIndicatorDotsStyle" TargetType="Frame">
+                <Setter Property="BackgroundColor" Value="{StaticResource CarouselActiveIndicatorDotColor}" />
+                <Setter Property="OutlineColor" Value="{StaticResource CarouselDotBorderColor}" />
+            </Style>
+            <Style x:Key="InactiveIndicatorDotsStyle" TargetType="Frame">
+                <Setter Property="BackgroundColor" Value="{StaticResource CarouselInactiveIndicatorDotColor}" />
+                <Setter Property="OutlineColor" Value="{StaticResource CarouselDotBorderColor}" />
+                <Setter Property="Opacity" Value="0.5" />
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

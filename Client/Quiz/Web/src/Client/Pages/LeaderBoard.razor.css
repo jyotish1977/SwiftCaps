@@ -1,0 +1,47 @@
+﻿::deep .leaderBoardHeader {
+    color: #6b6b6b;
+}
+
+::deep .leaderBoardColumn1 {
+    width: 60%
+}
+
+::deep .leaderBoardNextColumn {
+    text-align: center;
+    width: 20%
+}
+
+.leaderBoardContainer {
+    border-radius: 5px;
+}
+
+.leaderBoardItemsContainer {
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+
+::deep .redDot {
+    height: 12px;
+    width: 12px;
+    background-color: #dd5752;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+::deep .greenDot {
+    height: 12px;
+    width: 12px;
+    background-color: #5ec64d;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.leader-board-item-header-container{
+    display: flex;
+}
+
+    .leader-board-item-header-container,
+    .leader-board-item-container {
+        border-bottom: 1px solid #f3f2f1;
+        padding: 8px 0 !important;
+    }

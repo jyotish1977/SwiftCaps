@@ -1,0 +1,35 @@
+parameters:
+- name: component # component to build
+  type: string 
+  default: false
+
+steps:
+  - task: UseDotNet@2
+    displayName: 'Use DotNet 5.x'
+    inputs:
+      version: 5.x
+      includePreviewVersions: true
+    
+  - task: NuGetAuthenticate@0
+    displayName: 'Authenticate Nuget Feed'    
+
+  - task: PowerShell@2
+    env:
+      NugetFeedPat: $(NugetFeedPat)
+    displayName: 'Build, Test, Publish code'
+    inputs:
+      filePath: $(System.DefaultWorkingDirectory)/build.ps1
+      arguments: ${{ parameters.component }}
+
+  # - task: ArchiveFiles@2
+  #   displayName: 'Zip code'
+  #   inputs:
+  #     rootFolderOrFile: './artifacts'        
+  #     includeRootFolder: false
+  #     archiveFile: './artifacts/${{ parameters.component }}.zip'
+
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Pipeline Artifact'
+    inputs:
+      targetPath: './archives/${{ parameters.component }}.zip'
+      artifactName: ${{ parameters.component }}

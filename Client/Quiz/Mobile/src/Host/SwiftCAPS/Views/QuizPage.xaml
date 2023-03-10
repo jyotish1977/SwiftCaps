@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<infrastructure:BaseContentPage
+    x:Class="SwiftCaps.Views.QuizPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:cards="clr-namespace:PanCardView;assembly=PanCardView"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:infrastructure="clr-namespace:SwiftCaps.Infrastructure;assembly=SwiftCaps"
+    xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:templates="clr-namespace:SwiftCaps.Templates;assembly=SwiftCaps"
+    xmlns:triggers="clr-namespace:SwiftCaps.Triggers;assembly=SwiftCaps"
+    xmlns:viewModels="clr-namespace:SwiftCaps.ViewModels;assembly=SwiftCaps"
+    x:Name="QuizPageRef"
+    Title="QUIZ"
+    ios:Page.UseSafeArea="True"
+    BackgroundColor="{StaticResource Primary}"
+    BindingContext="{Binding QuizPage, Source={StaticResource Locator}}"
+    ControlTemplate="{StaticResource PageHeaderControlTemplate}"
+    x:DataType="viewModels:QuizPageViewModel"
+    Shell.NavBarIsVisible="False"
+    Shell.TabBarIsVisible="False"
+    mc:Ignorable="d">
+    <infrastructure:BaseContentPage.Content>
+
+        <!--  Carousel  -->
+        <Grid Margin="0,0,0,10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="20" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <cards:CarouselView
+                x:Name="Carousel"
+                Grid.Row="0"
+                Grid.ColumnSpan="3"
+                IsCyclical="False"
+                BackgroundColor="{StaticResource Primary}"
+                ItemsSource="{Binding CurrentSection.Questions}"
+                SelectedIndex="{Binding SelectedQuestionIndex}"
+                VerticalOptions="FillAndExpand">
+                <cards:CarouselView.ItemTemplate>
+                    <DataTemplate>
+                        <ContentView>
+                            <templates:QuestionCardTemplate
+                                AnswerUnfocusedCommand="{Binding Path=BindingContext.ValidateSectionCommand, Source={x:Reference QuizPageRef}}"
+                                OpenInfoCommand="{Binding Path=BindingContext.OpenInfoCommand, Source={x:Reference QuizPageRef}}"
+                                QuizLayoutStyle="{Binding Path=BindingContext.QuizLayoutStyle, Source={x:Reference QuizPageRef}}"
+                                SubmitCommand="{Binding Path=BindingContext.SubmitSectionCommand, Source={x:Reference QuizPageRef}}"
+                                VerticalOptions="FillAndExpand" />
+                        </ContentView>
+                    </DataTemplate>
+                </cards:CarouselView.ItemTemplate>
+                <cards:CarouselView.Triggers>
+                    <EventTrigger Event="ItemAppeared">
+                        <triggers:QuestionCardAppearingTrigger />
+                    </EventTrigger>
+                </cards:CarouselView.Triggers>
+            </cards:CarouselView>
+
+            <!--  Section 1 of 10  -->
+            <Label
+                Grid.Row="1"
+                Grid.Column="0"
+                Margin="20,0,0,0"
+                HorizontalTextAlignment="Start"
+                MaxLines="1"
+                Style="{StaticResource QuizPageFooterTextStyle}"
+                Text="{Binding SectionCountText}" />
+            <Grid Grid.Row="1" ColumnDefinitions="10,Auto,10"
+                  Grid.Column="1" Padding="0">
+                <Label Text="&lt;" TextColor="White"
+                       IsVisible="{Binding IsLessSymbolVisible,Mode=OneWay}" />
+                <BoxView CornerRadius="5" HeightRequest="10" WidthRequest="10" VerticalOptions="Center" Grid.Column="1"
+                         Color="{StaticResource CarouselActiveIndicatorDotColor}" />
+                <Label Text="&gt;" TextColor="White" Grid.Column="2"
+                       IsVisible="{Binding IsGreaterSymbolVisible,Mode=OneWay}" />
+            </Grid>
+            <!--  1/10  -->
+            <Label
+                Grid.Row="1"
+                Grid.Column="2"
+                Margin="0,0,20,0"
+                HorizontalTextAlignment="End"
+                Style="{StaticResource QuizPageFooterTextStyle}"
+                Text="{Binding QuestionCountText}" />
+
+        </Grid>
+
+    </infrastructure:BaseContentPage.Content>
+</infrastructure:BaseContentPage>

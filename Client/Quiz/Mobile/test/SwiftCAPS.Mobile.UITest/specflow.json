@@ -1,0 +1,8 @@
+{
+  "unitTestProvider": "NUnit",
+  "stepAssemblies": [
+    {
+      "assembly": "Xamariners.EndToEnd.Xamarin"
+    }
+  ]
+}

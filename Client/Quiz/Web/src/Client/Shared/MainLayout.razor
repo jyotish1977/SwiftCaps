@@ -1,0 +1,65 @@
+@inherits LayoutComponentBase
+
+
+<AuthorizeView Roles="@_allowedRoles">
+    <Authorized>
+        <Container>
+            <Header Text="SwiftCAPS" OnAppIconClick="@AppMenuClick">
+                <LoginDisplay />
+            </Header>
+            <Main>
+                <div class="page">
+
+                    <Stack Horizontal="true" Style="width:100%;">
+                        <ResponsiveLayout MinWidth="ResponsiveMode.Medium.ToMinCssValue()">
+                            <StackItem ClassName="navMenu" Grow="0" DisableShrink="true">
+                                <NavMenu />
+                            </StackItem>
+                        </ResponsiveLayout>
+
+                        <StackItem Grow="1" Style="overflow:hidden">
+                            <Stack VerticalFill="true" Style="width:100%;">
+
+                                <ResponsiveLayout MaxWidth="ResponsiveMode.Medium.ToMaxCssValue()">
+                                    <StackItem Grow="0" VerticalFill="false">
+                                        <IconButton IconName="GlobalNavButton" OnClick=@ShowMenu />
+                                    </StackItem>
+                                </ResponsiveLayout>
+
+                                <StackItem Grow="1" Tokens="new StackItemTokens { Padding = BodyPadding }" Style="overflow-y:auto;">
+                                    @Body
+                                </StackItem>
+                            </Stack>
+
+                            <ResponsiveLayout MaxWidth="ResponsiveMode.Medium.ToMaxCssValue()">
+                                <Panel Type=@PanelType.SmallFixedNear OnDismiss=@(() => HideMenu()) IsOpen=@_isMenuPanelOpen IsLightDismiss="true">
+                                    <NavigationTemplate>
+                                        <IconButton IconName="GlobalNavButton" OnClick=@(() => _isMenuPanelOpen = false) />
+                                    </NavigationTemplate>
+                                    <ChildContent>
+                                        <NavMenu />
+                                    </ChildContent>
+                                </Panel>
+                            </ResponsiveLayout>
+
+                        </StackItem>
+                    </Stack>
+                </div>
+            </Main>
+        </Container>
+    </Authorized>
+    <NotAuthorized>
+        <Container>
+            <Header Text="SwiftCAPS" ShowWaffle="false">
+            </Header>
+            <Main>
+                <Stack VerticalFill="true">
+                    @Body
+                </Stack>
+            </Main>
+        </Container>
+    </NotAuthorized>
+</AuthorizeView>
+
+
+<SidePanel @bind-IsAppPanelOpen="@_isAppPanelOpen" Applications="@State.Applications" />

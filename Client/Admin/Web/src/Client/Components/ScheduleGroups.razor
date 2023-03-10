@@ -1,0 +1,96 @@
+﻿@using SwiftCaps.Models.Models;
+
+<Panel IsOpen=@_isPanelOpen
+       Type=PanelType.Medium
+       IsLightDismiss="false"
+       HeaderText="Groups" 
+       OnDismiss=@PanelDismissHandler
+        ClassName= "upsert-panel-container">
+
+    <NavigationTemplate>
+
+        <Stack Horizontal="true" Tokens="@(new StackTokens { Padding = ".5rem" })"
+               HorizontalAlign="(_showBackButton) ? Alignment.SpaceBetween : Alignment.End">
+            @if (_showBackButton)
+            {
+                <IconButton OnClick="OnNavigationBackClick" IconName="Back" />
+            }
+            <StackItem Align="Alignment.End">
+                <IconButton OnClick=@(() => OnReloadGroups()) IconName="Refresh" />
+                <IconButton OnClick="@PanelDismissHandler" IconName="ChromeClose" />
+            </StackItem>
+
+        </Stack>
+            
+
+    </NavigationTemplate>
+
+    <ChildContent>
+
+        <Stack>
+            <CommandBar ClassName="quiz-command-bar" Items=@_commandItems>
+                <ItemTemplate Context="item">
+                    <CommandButton IconName="@item.IconName" ClassName="ms-Button--action ms-Button--command ms-Button--commandBar"
+                                   Text=@item.Text Command="_buttonCommand" CommandParameter="@item.Key"
+                                   Disabled="@((item.Key == CommandItem.Delete.ToString())  && _selectedGroupSummary.SelectedItems.Count == 0)">
+                    </CommandButton>
+                </ItemTemplate>
+            </CommandBar>
+
+        </Stack>
+        @if (_isBusy)
+        {
+            <Spinner Size=@SpinnerSize.Large Label="Loading..." />
+        }
+
+        @if (_showErrorMessage)
+        {
+            <div class="ms-Grid" dir="ltr">
+                <div class="ms-Grid-row">
+                    <div class="ms-Grid-col ms-sm12 ms-mdOffset2 ms-md8">
+                        <MessageBar MessageBarType="MessageBarType.Error" IsMultiline="false">
+                            @_groupListError
+                        </MessageBar>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (_canShowGrid)
+        {
+            <DetailsList ItemsSource="SchedulesGroupList"
+                         GetKey=@(item=>item.GroupId)
+                         IsVirtualizing="true"
+                         Columns="_columns"
+                         LayoutMode="BlazorFluentUI.Lists.DetailsListLayoutMode.Justified"
+                         TItem="ScheduleGroupSummary"
+                         Selection="_selectedGroupSummary"
+                         Compact=false
+                         CheckboxVisibility="CheckboxVisibility.Always"
+                         SelectionMode="SelectionMode.Multiple" />
+
+            @if (SchedulesGroupList != null && SchedulesGroupList.Count() == 0)
+            {
+                <Stack ClassName="mt-25" Grow="1">
+                    <StackItem Tokens=@(new StackItemTokens { Padding = 30 }) Align=@Alignment.Center>
+                        <MessageBar>
+                            Schedule does not have Groups. Add a group
+                        </MessageBar>
+                    </StackItem>
+
+
+                </Stack>
+            }
+        }
+
+
+
+        <AddScheduleGroups @ref="_addScheduleGroups" OnNavigationBackCallback="NavigationBackHandler" OnCloseCallback="CloseHandler"></AddScheduleGroups>
+
+        <DeletePanel @ref="_deletePanel" OnCloseCallback="PanelDismissHandler" OnDeleteCallback="DeleteHandler"></DeletePanel>
+
+    </ChildContent>
+
+</Panel>
+
+

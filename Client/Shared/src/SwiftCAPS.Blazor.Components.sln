@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31320.298
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SwiftCAPS.Blazor.Components", "SwiftCAPS.Blazor.Components\SwiftCAPS.Blazor.Components.csproj", "{2EE9BB6E-B854-456F-909C-F389A7886494}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2EE9BB6E-B854-456F-909C-F389A7886494}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EE9BB6E-B854-456F-909C-F389A7886494}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EE9BB6E-B854-456F-909C-F389A7886494}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EE9BB6E-B854-456F-909C-F389A7886494}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {971B4E9D-15CC-4E56-AFB9-7BB0A83C15FA}
+	EndGlobalSection
+EndGlobal

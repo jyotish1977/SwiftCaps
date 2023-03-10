@@ -1,0 +1,14 @@
+﻿@if (UserQuizzes is null)
+{
+    <BlazorFluentUI.Text Variant="TextType.XLarge">@Placeholder</BlazorFluentUI.Text>
+}
+else
+{
+    <BlazorFluentUI.Lists.List ItemsSource=@UserQuizzes TItem="SwiftCaps.Models.Models.UserQuiz">
+        <ItemTemplate>
+            <Stack ClassName="quizCardContainer">
+                <QuizCard UserQuiz="@context.Item" OnClick="@QuizClickHandler" />
+            </Stack>
+        </ItemTemplate>
+        </BlazorFluentUI.Lists.List>
+    }

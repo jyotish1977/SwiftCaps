@@ -1,0 +1,26 @@
+﻿<Theme>
+    <CascadingAuthenticationState>
+        <Router AppAssembly="@AppAssembly" PreferExactMatches="@true">
+            <Found Context="routeData">
+                <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@MainLayout">
+                    <NotAuthorized>
+                        @if (!context.User.Identity.IsAuthenticated)
+                        {
+                            <RedirectToLogin />
+                        }
+                        else
+                        {
+                            <AccessDenied />
+                        }
+                    </NotAuthorized>
+                </AuthorizeRouteView>
+            </Found>
+            <NotFound>
+                <LayoutView Layout="@typeof(MainLayout)">
+                    <PageNotFound />
+                </LayoutView>
+            </NotFound>
+        </Router>
+        <LayerHost Id="lhApp" />
+    </CascadingAuthenticationState>
+</Theme>

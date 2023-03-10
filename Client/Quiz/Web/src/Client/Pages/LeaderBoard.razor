@@ -1,0 +1,45 @@
+﻿@page "/leaderboard"
+@if (!string.IsNullOrWhiteSpace(ErrorMessage))
+{
+    <BlazorFluentUI.Text Variant="TextType.XLarge">
+        @ErrorMessage
+    </BlazorFluentUI.Text>
+}
+else
+{
+    @if (LeaderBoards is null)
+    {
+        <Spinner Size=@SpinnerSize.Large Label="Loading..." />
+    }
+    else
+    {
+        <Stack>
+            <StackItem Align="Alignment.Center">
+                <DocumentCard Type="DocumentCardType.Normal" ClassName="leaderBoardContainer">
+                    <Stack Tokens=@(new StackTokens {Padding="8px" })>
+
+                        <div class="leader-board-item-header-container">
+                            <div class="leaderBoardColumn1">
+                                <Text Variant="TextType.Medium" ClassName="leaderboardHeader">Quizzes for @DateTime.Now.ToString("MMMM")</Text>
+                            </div>
+                            <div class="leaderBoardNextColumn">
+                                <Text Variant="TextType.Medium" ClassName="leaderboardHeader">W</Text>
+                            </div>
+                            <div class="leaderBoardNextColumn">
+                                <Text Variant="TextType.Medium" ClassName="leaderboardHeader">M</Text>
+                            </div>
+                        </div>
+
+                        <BlazorFluentUI.Lists.List ClassName="leaderBoardItemsContainer" ItemsSource=@LeaderBoards TItem="LeaderBoardM">
+                            <ItemTemplate>
+                                <div class="leader-board-item-container">
+                                    <LeaderBoardItem LeaderBoard="@context.Item" />
+                                </div>
+                            </ItemTemplate>
+                        </BlazorFluentUI.Lists.List>
+                    </Stack>
+                </DocumentCard>
+            </StackItem>
+        </Stack>
+    }
+}

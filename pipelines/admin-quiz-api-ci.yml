@@ -1,0 +1,86 @@
+name: Admin_QuizApi_CiBuild_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+
+trigger:
+  branches:
+    include:
+    - master
+    - develop
+    - version/*
+    - feature/*
+  paths:
+    include:
+    - Api/Function/src/SwiftCaps.Admin.Services.Quiz.API
+    - Api/Function/test/SwiftCaps.Admin.Services.Quiz.API.Tests
+    - Api/Service/src/SwiftCaps.Admin.Services.Quiz
+    - Api/Service/test/SwiftCaps.Admin.Services.Quiz.Tests
+    - Shared/SwiftCaps.Helpers
+    - Shared/SwiftCaps.Data
+    - Shared/SwiftCaps.Models
+    - Shared/SwiftCaps.Services.Abstraction
+    - Shared/Xamariners.Functions.Core
+    - tools/build
+    - tools/SwiftCaps.Services.Admin.Quiz.API.Build
+    - pipelines/admin-quiz-api-ci.yml
+    - pipelines/templates/fx-build-template.yml
+    - pipelines/templates/fx-deploy-template.yml
+
+pr:
+- version/*     
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  - group: rsaf-common-group
+  - template: templates/buildnumber-variables-template.yml
+  - name: component
+    value: SwiftCaps.Services.Admin.Quiz.API 
+
+stages:
+- stage: Build
+  jobs:
+  - job: Build
+    steps:
+    - template: templates/buildnumber-template.yml
+    - template: templates/fx-build-template.yml
+      parameters:
+        component: $(component) 
+
+- stage: DevDeploy
+  dependsOn: Build     
+  condition: and(succeeded(), or(eq(variables.isPR,true), contains(variables['Build.SourceVersionMessage'], '***deploy_dev***')))
+  displayName: 'Dev Deploy'
+  jobs:
+  - deployment: DevDeploy
+    displayName: 'Deploy to Dev'
+    environment: Dev 
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - script: echo skipDevCD=$(skipDevCD)
+            - template: templates/fx-deploy-template.yml
+              parameters:
+                azConnection: $(RsafAzConnection)
+                appName: '$(AdminQuizApiAppPrefix)-dev'
+                resourceGroup: '$(ResourceGroupPrefix)-dev'
+                package: $(Pipeline.Workspace)/**/*.zip
+
+- stage: TestDeploy
+  dependsOn: Build     
+  condition: and(succeeded(), or(eq(variables.isMain, true), eq(variables.isDevelop, true), eq(variables.isVersion, true), eq(variables.isPR, true)))
+  displayName: 'Test Deploy'
+  jobs:
+  - deployment: TestDeploy
+    displayName: 'Deploy to Test'
+    environment: Test
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - template: templates/fx-deploy-template.yml
+              parameters:
+                azConnection: $(RsafAzConnection)
+                appName: '$(AdminQuizApiAppPrefix)-test'
+                resourceGroup: '$(ResourceGroupPrefix)-test'
+                package: $(Pipeline.Workspace)/**/*.zip

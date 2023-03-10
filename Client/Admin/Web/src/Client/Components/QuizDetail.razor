@@ -1,0 +1,226 @@
+﻿@using SwiftCaps.Models.Helpers;
+
+@if (_quizDetailCommand == QuizDetailCommand.ViewDetail)
+{
+    <Stack Tokens="@(new StackTokens { Padding = new CssValue(25.0) })">
+        <Stack ClassName="mb-10" Horizontal="true">
+            <StackItem Grow="1" Tokens="@(new StackItemTokens { Margin = new CssValue(10.0) })">
+                <BlazorFluentUI.Persona Text="@Quiz.Name"
+                                        HidePersonaDetails="true"
+                                        InitialsColor=PersonaInitialsColor.Magenta
+                                        Presence=@PersonaPresenceStatus.None
+                                        Size=@PersonaSize.Size100 />
+            </StackItem>
+            <StackItem Grow="6" ClassName="quiz-panel-column-section">
+                <Stack Tokens="@(new StackTokens { ChildrenGap = new[] {10.0} })">
+                    <Text Variant="TextType.XLargePlus">@Quiz.Name</Text>
+                    <Text Variant="TextType.Medium">
+                        @(Quiz.QuizSections?.Count ?? 0) sections - @(Quiz.QuizSections?.SelectMany(m=>m.Questions).Count() ?? 0) questions - @QuizSummary.Schedules schedules
+                    </Text>
+
+                    <Stack Horizontal="true" Style="margin:0;">
+                        <ActionButton IconName="Delete" Style="padding:0;"
+                                      OnClick="DeleteQuiz"> Delete Quiz</ActionButton>
+                        @if (UserState.ActiveQuizDetailTab == DetailsPivotType.Questions.ToString())
+                        {
+                            <span>&nbsp;&nbsp;</span>
+                            <ActionButton IconName="Add" OnClick="AddSection"> Add Section</ActionButton>
+                        }
+                    </Stack>
+                </Stack>
+            </StackItem>
+        </Stack>
+        <Pivot OnLinkClick="OnPivotClick" @bind-SelectedKey="@UserState.ActiveQuizDetailTab">
+            <PivotItem ItemKey="@DetailsPivotType.General.ToString()" HeaderText="General">
+                <Stack Tokens=@(new StackTokens { ChildrenGap = new[] {10.0}, Padding = "1rem" })>
+
+                    <StackItem>
+                        <Label>Name</Label>
+                        <Text>@Quiz.Name</Text>
+                    </StackItem>
+
+                    <StackItem>
+                        <Label>Description</Label>
+                        <Text>@Quiz.Description</Text>
+                    </StackItem>
+
+                    <StackItem>
+                        <Label>Created On</Label>
+                        <Text>@Quiz.Created.ToLocalTime().ToString("dd/MM/yyyy, hh:mm tt")</Text>
+                    </StackItem>
+
+                    <StackItem>
+                        <Label>Info</Label>
+                        <Text>@((MarkupString)GetMarkup(Quiz.InfoMarkdown))</Text>
+                    </StackItem>
+
+                    <StackItem Tokens="@(new StackItemTokens { Padding = "2rem 0 0 0" })">
+                        <DefaultButton ClassName="btn-default-blue" Text="Edit" OnClick="EditDetail" />
+                    </StackItem>
+                </Stack>
+            </PivotItem>
+            <PivotItem ItemKey="@DetailsPivotType.Questions.ToString()" HeaderText="Questions">
+
+                @if (Quiz.QuizSections == null || Quiz.QuizSections.Count() == 0)
+                {
+                    <Stack ClassName="mt-25" Grow="1">
+                        <MessageBar>
+                            Quiz does not have any sections. Add a section
+                        </MessageBar>
+                    </Stack>
+                }
+                else
+                {
+                    <Stack Horizontal="true">
+                        <StackItem Tokens="@(new StackItemTokens { Margin = "2em 0px 0em 1em" })" Grow="1">
+                            <Stack>
+                                <Text Variant="TextType.Medium" ClassName="quiz-panel-section-title">Sections</Text>
+                                @foreach (var section in Quiz.QuizSections)
+                                {
+                                    <ActionButton OnClick="@(()=> OnSectionClick(section.Index))">
+                                        <BlazorFluentUI.Persona Text="@section.Description.ToPersonaFormat()"
+                                                                HidePersonaDetails="true"
+                                                                InitialsColor=PersonaInitialsColor.LightGreen
+                                                                Presence=@PersonaPresenceStatus.None
+                                                                Size=@PersonaSize.Size24 />
+                                        &nbsp;&nbsp;
+                                        @if (SelectedQuizSection.Index == section.Index)
+                                        {
+                                            <b>Section @section.Index</b>
+                                        }
+                                        else
+                                        {
+                                            <text>Section @section.Index</text>
+                                        }
+                                    </ActionButton>
+                                }
+                            </Stack>
+                        </StackItem>
+                        <StackItem Grow="6" ClassName="quiz-panel-column-section">
+
+                            <Stack>
+                                <Text Variant="TextType.XLargePlus">
+                                    <IconButton ClassName="btn-icon-only" IconName="Edit" OnClick="@(()=> EditSection(SelectedQuizSection.Id))" />
+                                    <IconButton ClassName="btn-icon-only" IconName="Delete" OnClick="@(()=> DeleteSection(SelectedQuizSection.Id))"></IconButton>
+                                    @SelectedQuizSection.Description
+                                </Text>
+                            </Stack>
+                            @if (SelectedQuizSection.Questions == null || SelectedQuizSection.Questions.Count() == 0)
+                            {
+                                <StackItem ClassName="mt-25" Grow="1">
+                                    <MessageBar>
+                                        Section does not have any questions. Add a question
+                                    </MessageBar>
+                                </StackItem>
+                            }
+                            else
+                            {
+                                <Stack>
+                                    @if (_showErrorMessage)
+                                    {
+                                        <MessageBar MessageBarType="MessageBarType.Error" IsMultiline="false" Style="margin-top: 1rem;">
+                                            @_quizSaveError
+                                        </MessageBar>
+                                    }
+                                    @foreach (var question in SelectedQuizSection.Questions)
+                                    {
+                                        <Stack Tokens=@(new StackTokens { ChildrenGap = new[] {15.0} })>
+
+                                            <StackItem>
+                                                <Stack Horizontal="true">
+                                                    <StackItem Tokens="@(new StackItemTokens { Margin = "1.4rem 0 0 0" })" Grow="5">
+                                                        <IconButton ClassName="btn-icon-only"
+                                                                    IconName="Edit"
+                                                                    OnClick="@(()=> EditQuestion(question.Id))"></IconButton>
+                                                        <IconButton ClassName="btn-icon-only"
+                                                                    IconName="Delete"
+                                                                    OnClick="@(()=> DeleteQuestion(question.Id))"></IconButton>
+                                                        <span class="ms-fontSize-18 ms-fontWeight-bold">
+                                                            Question @question.QuizSectionIndex
+                                                        </span>
+                                                    </StackItem>
+
+                                                    <StackItem Grow="1" Align=@Alignment.End>
+                                                        @if (@question.QuizSectionIndex > 1)
+                                                        {
+                                                            <IconButton ClassName="btn-icon-only" IconName="Up" OnClick="@(() => UpdateSortOrder(SortOrder.Up, question))"></IconButton>
+                                                        }
+                                                        @if (@question.QuizSectionIndex < SelectedQuizSection.Questions.Count)
+                                                        {
+                                                            <IconButton ClassName="btn-icon-only" IconName="Down" OnClick="@(() => UpdateSortOrder(SortOrder.Down, question))"></IconButton>
+                                                        }
+                                                    </StackItem>
+                                                </Stack>
+
+                                                <Stack Tokens=@(new StackTokens { ChildrenGap = new[] {10.0} })>
+                                                    @if (question.HasHeader)
+                                                    {
+                                                        <StackItem>
+                                                            <Label>Header:</Label>
+                                                            <BlazorFluentUI.Text Variant="TextType.SmallPlus">
+                                                                @question.Header
+                                                            </BlazorFluentUI.Text>
+                                                        </StackItem>
+                                                    }
+
+                                                    <StackItem>
+                                                        <Label>Body:</Label>
+                                                        <BlazorFluentUI.Text Variant="TextType.SmallPlus">
+                                                            @question.Body
+                                                        </BlazorFluentUI.Text>
+                                                    </StackItem>
+
+                                                    @if (question.HasFooter)
+                                                    {
+                                                        <StackItem>
+                                                            <Label>Footer:</Label>
+                                                            <BlazorFluentUI.Text Variant="TextType.SmallPlus">
+                                                                @question.Footer
+                                                            </BlazorFluentUI.Text>
+                                                        </StackItem>
+                                                    }
+                                                </Stack>
+                                            </StackItem>
+                                        </Stack>
+                                    }
+                                </Stack>
+                            }
+
+                            <Stack Horizontal="true" Tokens="@(new StackTokens { ChildrenGap = new []{10.0}, Padding = "2rem 0 0 0" })">
+                                <DefaultButton ClassName="btn-default-blue" Style="padding:6px;"
+                                               Text="Add Question"
+                                               OnClick="AddQuestion" />
+                            </Stack>
+                        </StackItem>
+                    </Stack>
+
+                }
+
+            </PivotItem>
+        </Pivot>
+    </Stack>
+}
+
+@if (_quizDetailCommand == QuizDetailCommand.AddSection || _quizDetailCommand == QuizDetailCommand.EditSection)
+{
+    <UpsertSection QuizId="@Quiz.Id" SectionId="_sectionId"></UpsertSection>
+}
+
+@if (_quizDetailCommand == QuizDetailCommand.DeleteSection)
+{
+    <DeleteCommon Entity="Section"
+                 OnCloseCallback="DeletePanelCloseHandler"
+                 OnDeleteCallback="QuizSectionDeleteHandler"></DeleteCommon>
+}
+
+@if (_quizDetailCommand == QuizDetailCommand.AddQuestion || _quizDetailCommand == QuizDetailCommand.EditQuestion)
+{
+    <UpsertQuestion Section="SelectedQuizSection" QuestionId="_questionId"></UpsertQuestion>
+}
+
+@if (_quizDetailCommand == QuizDetailCommand.DeleteQuestion)
+{
+    <DeleteCommon Entity="Question"
+                 OnCloseCallback="DeletePanelCloseHandler"
+                 OnDeleteCallback="QuestionDeleteHandler"></DeleteCommon>
+}

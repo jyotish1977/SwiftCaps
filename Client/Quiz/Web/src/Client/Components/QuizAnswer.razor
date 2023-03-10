@@ -1,0 +1,5 @@
+﻿<TextField DefaultValue=""
+           OnFocus="@OnFocusChanged"
+           Value="@Answer.UserAnswer"
+           OnInput="@OnAnswerChanged"
+           ClassName="@(Answer.IsValid ? null : "is-error")" />

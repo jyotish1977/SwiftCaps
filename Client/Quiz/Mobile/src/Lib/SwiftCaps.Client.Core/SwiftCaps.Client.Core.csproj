@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="States\**" />
+    <EmbeddedResource Remove="States\**" />
+    <None Remove="States\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Styles\app.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Styles\app.css" />
+  </ItemGroup>
+
+ 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.31.0" />
+    <PackageReference Include="Unity.Container" Version="5.11.11" />
+    <PackageReference Include="Xamariners.Core" Version="4.0.5" />
+  </ItemGroup>
+
+ 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\..\Shared\SwiftCaps.Models\SwiftCaps.Models.csproj" />
+    <ProjectReference Include="..\..\..\..\..\..\Shared\SwiftCaps.Services.Abstraction\SwiftCaps.Services.Abstraction.csproj" />
+  </ItemGroup>
+
+</Project>

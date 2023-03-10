@@ -1,0 +1,10 @@
+variables:
+  isMain: $[eq(variables['Build.SourceBranchName'], 'master')]
+  isDevelop: $[eq(variables['Build.SourceBranchName'], 'develop')]  
+  isVersion: $[contains(variables['Build.SourceBranch'], 'version')]
+  versionNumber: $[replace(variables['Build.SourceBranchName'], 'v','')]      
+  isFeature: $[contains(variables['Build.SourceBranchName'], 'AF-')]
+  featureNumber: $[replace(variables['Build.SourceBranchName'], 'AF-','')]
+  isPR: $[eq(variables['Build.Reason'], 'PullRequest')]
+  buildId: $[variables['Build.BuildId']]
+  patch: $[counter(variables['build.reason'], 0)]

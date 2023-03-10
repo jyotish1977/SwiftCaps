@@ -1,0 +1,77 @@
+﻿@page "/quiz"
+@page "/quiz/section/{param}"
+
+@if (_userQuiz != null && _userQuiz.Completed is null)
+{
+    <Stack HorizontalAlign="Alignment.Center">
+        <div class="carousel">
+            <div class="carouselWrapper">
+                <div class="carouselItems">
+
+                      @foreach (var question in _currentQuizSection.Questions)
+                        {
+                            <div id="@($"carouselItem{question.QuizSectionIndex}")" class="carouselItem">
+                                <QuestionCard Question="question" AnswerChanged="@OnAnswerChanged" InfoText="@_infoText" />
+                            </div>
+                        }
+
+                </div>
+                @if (ShowLeftButton)
+                {
+                    <a href=""
+                       class="carouselNavPrev"
+                       @onclick="@(() => OnPaging(_carouselIndex - 1))"
+                       @onclick:preventDefault>
+                        <Icon IconName="ChevronLeft" />
+                    </a>
+                }
+
+                @if (ShowRightButton)
+                {
+                    <a href=""
+                       class="carouselNavNext"
+                       @onclick="@(() => OnPaging(_carouselIndex + 1))"
+                       @onclick:preventDefault>
+                        <Icon IconName="ChevronRight" />
+                    </a>
+                }
+                <PrimaryButton Text="Submit Section" Disabled="IsDisabled" ClassName="quizCardButton" OnClick="OnClickHandler" />
+                <div class="carouselMetaWrapper">
+                    <Text ClassName="carouselSectionInfo"
+                          Variant="TextType.Medium">
+                        Section @(_currentQuizSectionIndex + 1) of @_userQuiz.Schedule.Quiz.QuizSections.Count
+                    </Text>
+                    <div class="carouselPaging">
+                        @foreach (var question in _currentQuizSection.Questions)
+                        {
+                            <a href=""
+                               class="carouselPagingItem @GetPagingStateClass(question.QuizSectionIndex)"
+                               @onclick="@(() => OnPaging(question.QuizSectionIndex))"
+                               @onclick:preventDefault>
+                                @question.QuizSectionIndex
+                            </a>
+                        }
+                    </div>
+                    <Text ClassName="carouselQuestionInfo"
+                          Variant="TextType.Medium">
+                        @_carouselIndex/@_currentQuizSection.Questions.Count
+                    </Text>
+                </div>
+            </div>
+        </div>
+    </Stack>
+}
+else if (!_isDialogOpen)
+{
+    <Spinner Size=@SpinnerSize.Large Label=@_spinnerLabel />
+}
+<Dialog Title=@_dialogTitle
+        SubText=@_dialogMessage
+        IsOpen=@_isDialogOpen
+        IsBlocking="true">
+    <ChildContent />
+    <FooterTemplate>
+        <PrimaryButton Text="OK" OnClick=@OnDismiss />
+    </FooterTemplate>
+</Dialog>
+

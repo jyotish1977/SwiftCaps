@@ -1,0 +1,105 @@
+﻿@using SwiftCaps.Models.Enums
+
+<Panel IsOpen=@_isPanelOpen
+       IsLightDismiss="false"
+       OnDismiss=@PanelDismissHandler
+       Type="PanelType.Medium">
+    <NavigationTemplate>
+        <Stack Horizontal="true" Tokens="@(new StackTokens { Padding = ".5rem" })"
+               HorizontalAlign="(_showBackButton) ? Alignment.SpaceBetween : Alignment.End">
+            @if (_showBackButton)
+            {
+                <StackItem Align="Alignment.End">
+                    <IconButton OnClick="OnNavigationBackClick" IconName="Back" />
+                </StackItem>
+            }
+            <StackItem Align="Alignment.End">
+                <IconButton OnClick=@PanelDismissHandler IconName="ChromeClose" />
+            </StackItem>
+        </Stack>
+    </NavigationTemplate>
+    <ChildContent>
+
+        @if (_displayMode == DeleteDisplayMode.Success)
+        {
+            <Stack Tokens="@(new StackTokens { Padding = new CssValue(10.0), ChildrenGap = new[] { 10.0 } })">
+                <Stack Horizontal="true">
+                    <StackItem Tokens="@(new StackItemTokens { Padding = 5 })">
+                        <Text Variant="TextType.XLargePlus">
+                            <Icon Style="color: green" IconName="SkypeCircleCheck"></Icon>
+                        </Text>
+                    </StackItem>
+                    <StackItem>
+                        <Text Variant="TextType.XLargePlus">
+                            @_entity has been deleted
+                        </Text>
+                    </StackItem>
+                </Stack>
+                <Stack Style="margin:0;">
+                    <StackItem ClassName="action-button">
+                        <PrimaryButton OnClick="PanelDismissHandler">Close</PrimaryButton>
+                    </StackItem>
+                </Stack>
+            </Stack>
+        }
+
+        @if (_displayMode == DeleteDisplayMode.Loading)
+        {
+            <Stack Tokens="@(new StackTokens { Padding = new CssValue(10.0), ChildrenGap = new[] { 10.0 } })" Style="display: block;">
+                <StackItem>
+                    <Spinner Size=@SpinnerSize.Large Label="@_deleteLoadingLabel" />
+                </StackItem>
+            </Stack>
+        }
+
+        @if (_displayMode == DeleteDisplayMode.Content)
+        {
+            if (_showError)
+            {
+                <Stack Tokens="@(new StackTokens { Padding = new CssValue(10.0), ChildrenGap = new[] { 10.0 } })">
+                    <StackItem>
+                        <MessageBar MessageBarType="MessageBarType.Error" IsMultiline="false" Style="margin-top: 1rem;">
+                            @if (string.IsNullOrEmpty(_errorMessage))
+                            {
+                                <text>Error deleting @_entity section. Please try again.</text>
+                            }
+                            else
+                            {
+                                @_errorMessage
+                            }
+                        </MessageBar>
+                        <StackItem ClassName="action-button">
+                            <PrimaryButton OnClick="PanelDismissHandler">Close</PrimaryButton>
+                        </StackItem>
+                    </StackItem>
+                </Stack>
+            }
+
+            <Stack Tokens="@(new StackTokens { Padding = new CssValue(10.0) })">
+                <Stack Horizontal="true">
+                    <StackItem>
+                        <Text Variant="TextType.XLargePlus">
+                            Delete @_entity?
+                        </Text>
+                    </StackItem>
+                </Stack>
+                <Stack Style="margin:0;">
+                    <StackItem Tokens="@(new StackItemTokens { Margin= "2.4rem 0 0 0" })">
+                        <Text Variant="TextType.Small">
+                            When you delete @_entity.ToLower(), their data is deleted and will be inaccessible. Deleted @_entity.ToLower() cannot be recovered.
+                        </Text>
+                    </StackItem>
+                    <StackItem Tokens="@(new StackItemTokens { Margin= "1rem 0" })">
+                        <Text Variant="TextType.Small">
+                            Are you sure that you want to delete this @_entity?
+                        </Text>
+                    </StackItem>
+                    <StackItem ClassName="action-button">
+                        <PrimaryButton OnClick="@(async()=> await DeleteClick())">Delete</PrimaryButton>
+                    </StackItem>
+                </Stack>
+            </Stack>
+        }
+
+    </ChildContent>
+</Panel>

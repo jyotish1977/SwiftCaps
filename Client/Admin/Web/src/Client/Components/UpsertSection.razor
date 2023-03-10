@@ -1,0 +1,79 @@
+﻿
+@if (_showSuccessMessage)
+{
+    <Stack Tokens="@(new StackTokens { Padding = new CssValue(10.0), ChildrenGap = new[] { 10.0 } })">
+        <Stack Horizontal="true">
+            <StackItem Tokens="@(new StackItemTokens { Padding = 5 })">
+                <Text Variant="TextType.XLargePlus">
+                    <Icon Style="color: green" IconName="SkypeCircleCheck"></Icon>
+                </Text>
+            </StackItem>
+            <StackItem>
+                <Text Variant="TextType.XLargePlus">
+                    Section @_successMessageType
+                </Text>
+            </StackItem>
+        </Stack>
+        <Stack Style="margin:0;">
+            <StackItem>
+                <Text Variant="TextType.Small">
+                    Section "@model.Description" has been @_successMessageType successfully.
+                </Text>
+            </StackItem>
+        </Stack>
+    </Stack>
+}
+else
+{
+    <Stack Tokens="@(new StackTokens { Padding = new CssValue(10.0) })">
+        <Stack ClassName="mb-10" Horizontal="true">
+            <StackItem Grow="12" ClassName="quiz-panel-column-section">
+                <Stack Tokens="@(new StackTokens { ChildrenGap = new[] { 10.0 } })">
+                    <Text Variant="TextType.XLargePlus">
+                        @(_mode == CommandItem.Add ? "Add Section" : "Edit Section")
+                    </Text>
+                </Stack>
+            </StackItem>
+        </Stack>
+
+        <Stack Tokens="@(new StackTokens { Padding = "2.5rem 0" })">
+            <StackItem Tokens="@(new StackItemTokens { Margin = "2.5 0 0 0" })">
+
+                @if (_isBusy)
+                {
+                    <Spinner Size=@SpinnerSize.Large Label="Loading..." />
+                }
+                else
+                {
+                    @if (_showErrorMessage)
+                    {
+                        <div class="ms-Grid" dir="ltr">
+                            <div class="ms-Grid-row">
+                                <div class="ms-Grid-col ms-sm12 ms-mdOffset2 ms-md8">
+                                    <MessageBar MessageBarType="MessageBarType.Error" IsMultiline="false">
+                                        @_quizSaveError
+                                    </MessageBar>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+
+                    <EditForm EditContext="editContext" OnValidSubmit="@HandleValidSubmit">
+                        <DataAnnotationsValidator />
+
+                        <StackItem Tokens="@(new StackItemTokens { Margin = 2 })">
+                            <TextField Label="Name" Required="true" @bind-Value="@model.Description" />
+                        </StackItem>
+
+                        <StackItem ClassName="action-button">
+                            <PrimaryButton>@(_mode == CommandItem.Add ? "Save" : "Save changes")</PrimaryButton>
+                        </StackItem>
+                    </EditForm>
+
+                }
+
+            </StackItem>
+        </Stack>
+    </Stack>
+}

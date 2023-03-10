@@ -1,0 +1,60 @@
+﻿@page "/reporting/quizaverage"
+
+
+<Stack Tokens=@(new StackTokens { Padding = "0 1rem" })>
+    <StackItem>
+        <Stack ClassName="page-header">
+            <Text As="p" Variant="TextType.XLargePlus">Quiz % Avg</Text>
+        </Stack>
+
+        @if (_isBusy)
+        {
+            <Stack Tokens=@(new StackTokens { Padding = "1rem 0" })>
+                <Spinner Size=@SpinnerSize.Large Label="Loading..." />
+            </Stack>
+        }
+
+        @if (_showErrorMessage)
+        {
+            <Stack Tokens=@(new StackTokens { Padding = "1rem 0" })>
+                <StackItem>
+                    <div class="ms-Grid-col ms-sm12 ms-mdOffset2 ms-md8">
+                        <MessageBar MessageBarType="MessageBarType.Error" IsMultiline="false">
+                            Error retrieving report data. Please try again.
+                        </MessageBar>
+                    </div>
+                </StackItem>
+            </Stack>
+        }
+
+        @if (_showInfoMessage)
+        {
+            <Stack Tokens=@(new StackTokens { Padding = "1rem 0" })>
+                <StackItem>
+                    <div class="ms-Grid-col ms-sm12 ms-mdOffset2 ms-md8">
+                        <MessageBar MessageBarType="MessageBarType.Info" IsMultiline="false">
+                            No report data found.
+                        </MessageBar>
+                    </div>
+                </StackItem>
+            </Stack>
+        }
+
+        @if (_canShowGrid)
+        {
+            <Stack Tokens="@(new StackTokens { Padding = "0 1rem" })">
+                <StackItem>
+                    <DetailsList ItemsSource="_reportData"
+                                 GetKey=@(item => item.QuizName)
+                                 IsVirtualizing="true"
+                                 Columns="_columns"
+                                 LayoutMode="BlazorFluentUI.Lists.DetailsListLayoutMode.Justified"
+                                 TItem="QuizAverageReportItemViewModel"
+                                 Compact=false
+                                 SelectionMode="SelectionMode.None" />
+                </StackItem>
+
+            </Stack>
+        }
+    </StackItem>
+</Stack>

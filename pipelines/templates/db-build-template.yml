@@ -1,0 +1,40 @@
+parameters:
+- name: component # component to build
+  type: string 
+  default: SwiftCaps.Database
+
+steps:
+  - task: UseDotNet@2
+    displayName: 'Use DotNet 5.x'
+    inputs:
+      version: 5.x
+      includePreviewVersions: true
+
+  - task: CmdLine@2
+    displayName: 'Install dotnet-ef tool 5.0.6'  
+    inputs:
+      script: 'dotnet tool install dotnet-ef --global --version 5.0.6'       
+    
+  - task: NuGetAuthenticate@0
+    displayName: 'Authenticate Nuget Feed'    
+
+  - task: PowerShell@2
+    env:
+      NugetFeedPat: $(NugetFeedPat)
+    displayName: 'Build, Publish Script'
+    inputs:
+      filePath: $(System.DefaultWorkingDirectory)/build.ps1
+      arguments: ${{ parameters.component }}
+  
+  - task: CopyFiles@2
+    inputs:
+      Contents: 'pipelines/templates/*.ps1'
+      TargetFolder: 'artifacts'  
+      flattenFolders: true
+
+
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Pipeline Artifact'
+    inputs:
+      targetPath: './artifacts'
+      artifactName: ${{ parameters.component }}

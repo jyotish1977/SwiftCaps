@@ -1,0 +1,15 @@
+﻿<Stack Style="width:100%;" Tokens="@(new StackTokens() { ChildrenGap = new [] {20d}})">
+    <DocumentCard Type="DocumentCardType.Normal" ClassName="quizCard">
+        <Stack Style="width: 100%; padding: 20px;">
+            <Stack>
+                <StackItem Align="Alignment.End" ClassName="@_titleClasses">
+                    @_title
+                </StackItem>
+            </Stack>
+            <Text Variant="@titleTextType" ClassName="quizCardName">@UserQuiz?.Schedule?.Quiz?.Name</Text>
+            <Text Variant="@subtitleTextType">@_sectionsQuestionsCount</Text>
+            <Text Variant="@descriptionTextType" ClassName="quizCardDescriptionText">@UserQuiz?.Schedule?.Quiz?.Description</Text>
+        </Stack>
+        <PrimaryButton Disabled="_isQuizCompleted" Text="@_buttonText" OnClick="@OnClickHandler" ClassName="@_buttonClasses" />
+    </DocumentCard>
+</Stack>

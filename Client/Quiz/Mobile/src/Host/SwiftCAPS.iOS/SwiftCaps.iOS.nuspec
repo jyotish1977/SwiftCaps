@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>SwiftCAPS.iOS</id>
+    <version>1.0</version>
+    <authors>Xamariners</authors>
+    <owners>Xamariners</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Xamariners</description>
+    <releaseNotes>Xamariners</releaseNotes>
+    <copyright>Xamariners</copyright>
+    <tags>Xamariners</tags>
+  </metadata>
+  <files>
+  <file src="**/bin/iPhone/$configuration$/*.ipa" target="" />
+  <file src="**/bin/iPhone/$configuration$/SwiftCaps.iOS.exe.config" />
+  <file src="**/bin/iPhone/$configuration$/SwiftCaps.dll.config" />
+  <file src="**/*.mobileprovision" target="" />
+</files>
+</package>

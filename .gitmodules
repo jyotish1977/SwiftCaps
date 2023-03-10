@@ -1,0 +1,4 @@
+[submodule "Infra/DevOps"]
+	path = Infra/DevOps
+	url = https://xamariners@dev.azure.com/xamariners/DevOps/_git/AzureInfra
+	branch = version/0.1.0

@@ -1,0 +1,98 @@
+﻿@using SwiftCaps.Models.Models;
+
+<Panel IsOpen=@_isPanelOpen
+       Type=PanelType.Medium
+       IsLightDismiss="false"
+       HeaderText="Add Groups"
+       OnDismiss=@OnPanelDismiss>
+
+    <NavigationTemplate>
+        <Stack Horizontal="true" Tokens="@(new StackTokens { Padding = ".5rem" })"
+               HorizontalAlign="(_displayPanelBackButton) ? Alignment.SpaceBetween : Alignment.End">
+            @if (showBackButton)
+            {
+                <IconButton OnClick="OnNavigationBackClick" IconName="Back" />
+            }
+            <StackItem Align="Alignment.End">
+                <IconButton OnClick=@(() => OnReloadScheduleGroups()) IconName="Refresh" />
+                <IconButton OnClick="@OnPanelDismiss" IconName="ChromeClose" />
+            </StackItem>
+
+        </Stack>
+    </NavigationTemplate>
+
+    <ChildContent>
+        <TextField @ref="_searchField" Placeholder="Search for a group" OnInput="OnSearch" ClassName="searchBox">
+            <PrefixContent>
+                <Icon IconName="Search" />
+            </PrefixContent>
+            <SuffixContent>
+                <Icon @onclick="OnSearchClear" IconName="ChromeClose" Style="cursor:pointer;" />
+
+            </SuffixContent>
+        </TextField>
+
+
+
+
+        @if (_isBusy)
+        {
+            <Spinner Size=@SpinnerSize.Large Label="Loading..." Style="padding:10px;" />
+        }
+
+
+        @if (_showErrorMessage)
+        {
+            <div class="ms-Grid" dir="ltr">
+                <div class="ms-Grid-row">
+                    <div class="ms-Grid-col ms-sm12 ms-mdOffset2 ms-md8">
+                        <MessageBar MessageBarType="MessageBarType.Error" IsMultiline="false" Style="padding: 10px !important">
+                            @_addGroupsListError
+                        </MessageBar>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (_canShowGrid)
+        {
+            <StackItem Grow="1" Tokens="@(new StackItemTokens { Margin = new CssValue(10.0) })">
+
+                <div data-is-scrollable="true" style="height:450px;overflow-y:auto;">
+                    <DetailsList ItemsSource="_groups"
+                                 GetKey=@(item=>item.Id)
+                                 IsVirtualizing="true"
+                                 Columns="_columns"
+                                 LayoutMode="BlazorFluentUI.Lists.DetailsListLayoutMode.Justified"
+                                 TItem="Group"
+                                 Selection="_selectedGroup"
+                                 Compact=false
+                                 CheckboxVisibility="CheckboxVisibility.Always"
+                                 SelectionMode="SelectionMode.Multiple" />
+
+                    @if (_groups != null && _groups.Count() == 0)
+                    {
+                        <Stack ClassName="mt-25" Grow="1">
+                            <StackItem Tokens=@(new StackItemTokens { Padding = 10 }) Align=@Alignment.Center>
+                                <MessageBar>
+                                    No groups were found
+                                </MessageBar>
+                            </StackItem>
+                        </Stack>
+                    }
+                </div>
+            </StackItem>
+
+
+
+
+        }
+
+        <StackItem Grow="1" Tokens=@(new StackItemTokens { Padding = 10 }) Align=@Alignment.Start ClassName="action-button">
+            <PrimaryButton ClassName="btn-default-blue" Text="@( _selectedGroup.SelectedItems.Count > 0 ? "Add (" + _selectedGroup.SelectedItems.Count.ToString() +")" : "Add")" Disabled="@(_selectedGroup.SelectedItems.Count==0)" OnClick="OnScheduleGroupCreate"></PrimaryButton>
+            <PrimaryButton Text="Cancel" ClassName="btn-default-blue" OnClick="OnNavigationBackClick"></PrimaryButton>
+        </StackItem>
+
+    </ChildContent>
+
+</Panel>

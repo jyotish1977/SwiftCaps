@@ -1,0 +1,8 @@
+﻿.logoutContent {
+	min-height: 10em;
+	min-width: 10em;
+	border: 1px solid var(--semanticColors-VariantBorder);
+	padding: 5em;
+	-webkit-box-shadow: 0 1.6px 3.6px 0 rgba(0,0,0,.132),0 .3px .9px 0 rgba(0,0,0,.108);
+	box-shadow: 0 1.6px 3.6px 0 rgba(0,0,0,.132),0 .3px .9px 0 rgba(0,0,0,.108);
+}

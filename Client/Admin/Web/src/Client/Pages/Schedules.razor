@@ -1,0 +1,67 @@
+﻿@page "/schedules"
+
+<Stack ClassName="page-header">
+    <Text As="p" Variant="TextType.XLargePlus">Quiz Schedules</Text>
+</Stack>
+
+<Stack>
+    <CommandBar ClassName="quiz-command-bar" Items=@_commandItems>
+        <ItemTemplate Context="item">
+            <CommandButton IconName="@item.IconName" ClassName="ms-Button--action ms-Button--command ms-Button--commandBar"
+                           Text=@item.Text Command="_buttonCommand" CommandParameter="@item.Key"
+                           Disabled="@((item.Key == CommandItem.Edit.ToString() || item.Key == CommandItem.Delete.ToString())  && SelectedScheduleSummary.SelectedItems.Count == 0)">
+            </CommandButton>
+        </ItemTemplate>
+    </CommandBar>
+</Stack>
+
+@if (_isBusy)
+{
+    <Spinner Size=@SpinnerSize.Large Label="Loading..." />
+}
+
+@if (_showErrorMessage)
+{
+    <div class="ms-Grid" dir="ltr">
+        <div class="ms-Grid-row">
+            <div class="ms-Grid-col ms-sm12 ms-mdOffset2 ms-md8">
+                <MessageBar MessageBarType="MessageBarType.Error" IsMultiline="false">
+                    @_scheduleListError
+                </MessageBar>
+            </div>
+        </div>
+    </div>
+}
+
+@if (_canShowGrid)
+{
+    <DetailsList ItemsSource="ScheduleList"
+                 GetKey=@(item=>item.Id)
+                 IsVirtualizing="true"
+                 Columns="_columns"
+                 LayoutMode="BlazorFluentUI.Lists.DetailsListLayoutMode.Justified"
+                 TItem="ScheduleSummaryItem"
+                 OnItemInvoked="OnScheduleItemClick"
+                 Selection="SelectedScheduleSummary"
+                 Compact=false
+                 CheckboxVisibility="CheckboxVisibility.OnHover"
+                 SelectionMode="SelectionMode.Single" />
+
+    @if (ScheduleList != null && ScheduleList.Count() == 0)
+    {
+        <Stack>
+            <StackItem Tokens=@(new StackItemTokens { Padding = 30 }) Align=@Alignment.Center>
+                <div class="ms-fontColor-gray120 ms-fontSize-20">
+                    No schedules available
+                </div>
+            </StackItem>
+        </Stack>
+    }
+}
+
+<ScheduleDetail @ref="detailsPanel" OnCloseCallback="OnDetailsCloseHandler"></ScheduleDetail>
+
+<UpsertSchedule @ref="upsertPanel" OnCloseCallback="OnUpsertCloseHandler"></UpsertSchedule>
+    
+<DeletePanel @ref="deletePanel" OnCloseCallback="OnDeleteCloseHandler" 
+             OnDeleteCallback="DeleteHandler"></DeletePanel>

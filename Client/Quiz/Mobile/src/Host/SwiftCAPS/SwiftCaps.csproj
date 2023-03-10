@@ -1,0 +1,162 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>8.0</LangVersion>
+    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+    <Configurations>Debug;Release;DebugFake</Configurations>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugFake|AnyCPU'">
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <DefineConstants>DEBUG;TRACE;FAKE</DefineConstants>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\Images\close.png" />
+    <None Remove="Resources\Images\completedTestIcon.png" />
+    <None Remove="Resources\Images\greencircle.png" />
+    <None Remove="Resources\Images\info.png" />
+    <None Remove="Resources\Images\monthlyTestIcon.png" />
+
+    <None Remove="Resources\Images\redcircle.png" />
+
+    <None Remove="Resources\Images\RSAFlogo.png" />
+
+    <None Remove="Resources\Images\weeklyTestIcon.png" />
+    <None Remove="Resources\Images\headerlogo.png" />
+    <None Remove="Resources\Images\swiftbuttonicon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Images\close.png" />
+    <EmbeddedResource Include="Resources\Images\completedTestIcon.png" />
+
+    <EmbeddedResource Include="Resources\Images\greencircle.png" />
+
+    <EmbeddedResource Include="Resources\Images\info.png" />
+    <EmbeddedResource Include="Resources\Images\redcircle.png" />
+
+    <EmbeddedResource Include="Resources\Images\RSAFlogo.png" />
+
+    <EmbeddedResource Include="Resources\Images\weeklyTestIcon.png" />
+    <EmbeddedResource Include="Resources\Images\monthlyTestIcon.png" />
+    <EmbeddedResource Include="Resources\Images\headerlogo.png" />
+    <EmbeddedResource Include="Resources\Images\swiftbuttonicon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="FodyWeavers.xsd" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.3.0" />
+    <PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.3.0" />
+    <PackageReference Include="Microsoft.AppCenter.Distribute" Version="4.3.0" />
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.31.0" />
+    <PackageReference Include="PropertyChanged.Fody" Version="3.2.6" PrivateAssets="All" />
+    <PackageReference Include="System.Reactive" Version="5.0.0" />
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2083" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
+    <PackageReference Include="Xamariners.Mobile.Core" Version="0.1.15" />
+    <PackageReference Include="Xamariners.Mvvm" Version="1.0.1" />
+    <PackageReference Include="Xamariners.Utilities" Version="1.0.0" />
+    <PackageReference Include="CardsView" Version="2.8.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\..\Shared\SwiftCaps.Fake\SwiftCaps.Fake.csproj" Condition="$(DefineConstants.Contains('FAKE'))" />
+    <ProjectReference Include="..\..\..\..\..\..\Shared\SwiftCaps.Models\SwiftCaps.Models.csproj" />
+    <ProjectReference Include="..\..\..\..\..\Shared\src\SwiftCaps.Client.Cache.Service\SwiftCaps.Client.Cache.Service.csproj" />
+    <ProjectReference Include="..\..\Lib\SwiftCaps.Bootstrap\SwiftCaps.Client.Bootstrap.csproj" />
+    <ProjectReference Include="..\..\Lib\SwiftCaps.Client.Core\SwiftCaps.Client.Core.csproj" />
+  </ItemGroup>
+
+  <Choose>
+    <When Condition=" '$(Configuration)' == 'DebugFake' ">
+      <ItemGroup>
+        <ProjectReference Include="..\..\..\..\..\..\Shared\SwiftCaps.Fake\SwiftCaps.Fake.csproj" />
+      </ItemGroup>
+    </When>
+  </Choose>
+
+  <ItemGroup>
+    <Compile Update="AppShell.xaml.cs">
+      <DependentUpon>AppShell.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Controls\PageHeaderControlTemplate.xaml.cs">
+      <DependentUpon>PageHeaderControlTemplate.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Templates\QuizCardTemplate.xaml.cs">
+      <DependentUpon>QuizCardTemplate.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\LoginPage.xaml.cs">
+      <DependentUpon>LoginPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\QuizListPage.xaml.cs">
+      <DependentUpon>QuizListPage.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="AppShell.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+
+    <EmbeddedResource Update="Views\QuizTrackerPage.xaml">
+	<Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Controls\PageHeaderControlTemplate.xaml">
+    <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="NotHome.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Templates\QuestionCardTemplate.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Templates\QuizCardTemplate.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\QuizListPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="AppShell.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="Controls\PageHeaderControlTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="Templates\QuestionCardTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="Templates\TestCardTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="Views\LoginPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="Views\QuizListPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="Views\QuizPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="Views\QuizTrackerPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+  </ItemGroup>
+</Project>

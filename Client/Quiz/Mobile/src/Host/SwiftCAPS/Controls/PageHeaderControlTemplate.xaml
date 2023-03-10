@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ControlTemplate
+    x:Class="SwiftCaps.Controls.PageHeaderControlTemplate"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:extensions="clr-namespace:SwiftCaps.Extensions;assembly=SwiftCaps"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:triggers="clr-namespace:SwiftCaps.Triggers;assembly=SwiftCaps"
+    mc:Ignorable="d">
+    <Grid BackgroundColor="{StaticResource Primary}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <ContentPresenter
+            Grid.Row="1"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand" />
+
+        <StackLayout
+            Grid.Row="1"
+            Grid.Column="0"
+            BackgroundColor="{StaticResource Primary}"
+            IsVisible="{TemplateBinding ShowDropdown}"
+            VerticalOptions="Start">
+            <StackLayout
+                BindableLayout.ItemsSource="{TemplateBinding DropDownList}"
+                Spacing="0"
+                VerticalOptions="FillAndExpand">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout>
+                            <Button
+                                Margin="0,3"
+                                BackgroundColor="Transparent"
+                                Command="{TemplateBinding ToolbarItemCommand}"
+                                CommandParameter="{Binding NavParam}"
+                                FontFamily="{StaticResource FontFamilyDense}"
+                                FontSize="{StaticResource FontSizeTestType}"
+                                HorizontalOptions="CenterAndExpand"
+                                Text="{Binding Title}"
+                                TextColor="White" />
+                        </StackLayout>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </StackLayout>
+            <StackLayout.Triggers>
+                <DataTrigger
+                    Binding="{TemplateBinding ShowDropdown}"
+                    TargetType="StackLayout"
+                    Value="False">
+                    <DataTrigger.EnterActions>
+                        <triggers:IsVisibleAnimationTriggerAction IsMakeVisible="False" TranslateY="-200" />
+                    </DataTrigger.EnterActions>
+                    <DataTrigger.ExitActions>
+                        <triggers:IsVisibleAnimationTriggerAction IsMakeVisible="True" TranslateY="0" />
+                    </DataTrigger.ExitActions>
+                </DataTrigger>
+            </StackLayout.Triggers>
+        </StackLayout>
+
+        <Grid
+            Grid.Row="0"
+            Padding="15,5,15,5"
+            BackgroundColor="{StaticResource Primary}"
+            ColumnSpacing="5">
+
+            <Image
+                Grid.Row="0"
+                Grid.Column="0"
+                HorizontalOptions="Start"
+                Source="{extensions:ImageResource SwiftCaps.Resources.Images.RSAFlogo.png}"
+                VerticalOptions="Center" />
+
+            <!--<Label
+                Grid.Row="0"
+                Grid.Column="1"
+                Style="{StaticResource HeadingTextStyle}"
+                Text="RSAF"
+                TextColor="White" />-->
+
+            <Button
+                Grid.Row="0"
+                Grid.Column="2"
+                BackgroundColor="Transparent"
+                Command="{TemplateBinding ShowDropdownCommand}"
+                HorizontalOptions="End"
+                Style="{StaticResource HeadingButtonStyle}"
+                Text="{TemplateBinding Title}"
+                TextColor="{StaticResource DarkMustardColor}"
+                VerticalOptions="Center" />
+
+            <Frame
+                Grid.Row="1"
+                Grid.Column="0"
+                Grid.ColumnSpan="3"
+                Margin="-20,0"
+                Padding="0"
+                BorderColor="{StaticResource GrayTextColor}"
+                HeightRequest="1" />
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="35" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="1" />
+            </Grid.RowDefinitions>
+        </Grid>
+    </Grid>
+</ControlTemplate>

@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<infrastructure:BaseContentPage
+    x:Class="SwiftCaps.Views.QuizListPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:iOsSpecific="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+    xmlns:infrastructure="clr-namespace:SwiftCaps.Infrastructure;assembly=SwiftCaps"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:templates="clr-namespace:SwiftCaps.Templates;assembly=SwiftCaps"
+    xmlns:converters="clr-namespace:SwiftCaps.Converters;assembly=SwiftCaps"
+    x:Name="QuizList"
+    Title="QUIZ OVERVIEW"
+    iOsSpecific:Page.UseSafeArea="true"
+    BackgroundColor="{StaticResource Primary}"
+    BindingContext="{Binding QuizListPage, Source={StaticResource Locator}}"
+    ControlTemplate="{StaticResource PageHeaderControlTemplate}"
+    Shell.NavBarIsVisible="False"
+    Shell.TabBarIsVisible="False"
+    mc:Ignorable="d">
+    <infrastructure:BaseContentPage.Content>
+        <CollectionView ItemsSource="{Binding UserQuizzes}" >
+            <CollectionView.EmptyView>
+                <StackLayout IsVisible="{Binding Movements, Converter={converters:ListIsNullOrEmptyConverter}}">
+                    <Label  HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Style="{StaticResource QuizPageFooterTextStyle}">No Quiz Allocated</Label>
+                </StackLayout>
+            </CollectionView.EmptyView>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <StackLayout>
+                        <templates:QuizCardTemplate ButtonTappedCommand="{Binding Source={x:Reference QuizList}, Path=BindingContext.GoToQuizCommand}" UserQuiz="{Binding .}" />
+                    </StackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </infrastructure:BaseContentPage.Content>
+</infrastructure:BaseContentPage>

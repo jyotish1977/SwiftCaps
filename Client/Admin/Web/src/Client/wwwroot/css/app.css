@@ -1,0 +1,115 @@
+﻿html, body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    margin: 0px;
+}
+
+a, .btn-link {
+    color: #0366d6;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+}
+
+.content {
+    padding-top: 1.1rem;
+}
+
+.valid.modified:not([type=checkbox]) {
+    outline: 1px solid #26b050;
+}
+
+.invalid {
+    outline: 1px solid red;
+}
+
+.validation-message {
+    color: red;
+}
+
+#blazor-error-ui {
+    background: lightyellow;
+    bottom: 0;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+    #blazor-error-ui .dismiss {
+        cursor: pointer;
+        position: absolute;
+        right: 0.75rem;
+        top: 0.5rem;
+    }
+
+.applink {
+    text-decoration: none;
+    color: currentColor;
+}
+
+    .applink > div.container {
+        background-color: white;
+        width: 10em !important;
+        height: 10em !important;
+    }
+
+.ms-Panel-main {
+    background-color: #f4f4f4
+}
+
+.quiz-panel-column-section {
+    flex-basis: 0;
+}
+
+.quiz-panel-section-title {
+    margin-top: 35px;
+    margin-bottom: 10px;
+}
+
+.page-header {
+    border-bottom: 1px solid var(--palette-NeutralQuaternaryAlt);
+}
+
+.quiz-command-bar .ms-CommandBar {
+    padding: 0;
+}
+
+.mt-25 {
+    margin-top: 25px;
+}
+
+.ms-Button--default.btn-default-blue {
+    border: 1px solid var(--palette-Accent);
+    color: var(--palette-Accent);
+}
+
+    .ms-Button--default.btn-default-blue:hover {
+        color: var(--palette-Accent);
+    }
+
+.btn-icon-only .ms-Button-textContainer {
+    display: none;
+}
+
+.action-button {
+    padding: 1rem 0 1.5rem 0 !important;
+    height: auto !important;
+    width: 100% !important;
+    position: fixed;
+    bottom: 0;
+    background: white;
+}
+
+.upsert-panel-container .ms-Panel-scrollableContent {
+    margin-bottom: 5rem;
+}
+
+.disable-dropdown-label > .ms-Dropdown-root > .ms-Label {
+    color: var(--semanticTextColors-DisabledBodyText);
+}

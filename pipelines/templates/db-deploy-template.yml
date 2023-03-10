@@ -1,0 +1,42 @@
+parameters:
+- name: component # pipeline artifact name
+  type: string
+  default: SwiftCaps.Database
+- name: azConnection # Azure Service Connection
+  type: string 
+- name: resourceGroup # Azure Service Connection
+  type: string   
+- name: serverName # sql server name
+  type: string 
+- name: user # sql user name
+  type: string   
+- name: pwd # sql user password
+  type: string   
+- name: dbName # database name
+  type: string  
+- name: sqlFile # sql script file name
+  type: string
+  default: swiftcaps.sql  
+
+steps:
+- task: AzurePowerShell@5
+  displayName: Set Firewall
+  inputs:
+    azureSubscription: ${{ parameters.azConnection }}
+    ScriptPath: '$(Pipeline.Workspace)/${{ parameters.component }}/SetAzureFirewallRule.ps1'
+    ScriptArguments: -ServerName ${{ parameters.serverName }} -ResourceGroup ${{ parameters.resourceGroup }}
+    azurePowerShellVersion: LatestVersion
+
+- task: CmdLine@1
+  displayName: Run Sqlcmd
+  inputs:
+    filename: Sqlcmd
+    arguments: '-S ${{ parameters.serverName }}.database.windows.net -U ${{ parameters.user }} -P ${{ parameters.pwd }} -d ${{ parameters.dbName }} -i $(Pipeline.Workspace)/${{ parameters.component }}/${{ parameters.sqlFile }}'
+
+- task: AzurePowerShell@5
+  displayName: Remove Firewall
+  inputs:
+    azureSubscription: ${{ parameters.azConnection }}
+    ScriptPath: '$(Pipeline.Workspace)/${{ parameters.component }}/RemoveAzureFirewallRule.ps1'
+    ScriptArguments: -ServerName ${{ parameters.serverName }} -ResourceGroup ${{ parameters.resourceGroup }}
+    azurePowerShellVersion: LatestVersion
